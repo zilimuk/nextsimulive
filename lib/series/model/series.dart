@@ -1,160 +1,181 @@
-class Series {
-  late int status;
-  late String message;
-  late List<ListSeries> listSeries;
+class SeriesList {
+  int? status;
+  String? message;
+  Series? series;
 
-  Series(
-      {required this.status, required this.message, required this.listSeries});
+  SeriesList({this.status, this.message, this.series});
 
-  Series.fromJson(Map<String, dynamic> json) {
+  SeriesList.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    if (json['series'] != null) {
-      listSeries = <ListSeries>[];
-      json['series'].forEach((v) {
-        listSeries.add(new ListSeries.fromJson(v));
-      });
-    }
+    series =
+        json['series'] != null ? new Series.fromJson(json['series']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
-    if (this.listSeries != null) {
-      data['series'] = this.listSeries.map((v) => v.toJson()).toList();
+    if (this.series != null) {
+      data['series'] = this.series!.toJson();
     }
     return data;
   }
 }
 
-class ListSeries {
-  late int seriesId;
-  late String seriesName;
-  late String seriesDescription;
-  late String seriesTags;
-  late String maturityLevel;
-  late String category;
-  late int userid;
-  late Null partnerId;
-  late int views;
-  late String dateAdded;
-  late String featured;
-  late String broadcast;
-  late String allowComments;
-  late String allowRating;
-  late int totalComments;
-  late String lastCommented;
-  late int totalObjects;
-  late int rating;
-  late int ratedBy;
-  late String voters;
-  late String active;
-  late String publicUpload;
-  late String type;
-  late String fileDirectory;
-  late Null startPublishedDate;
-  late Null endPublishedDate;
-  late String thumbsUpdatedOn;
-  late int superFeature;
-  late Null realeaseDate;
-  late int isAvod;
-  late int isTvod;
-  late int isSvod;
-  late String creditsRequired;
-  late int rentalHours;
-  late int overrideDefaultMonetization;
-  late Null startReleasedDate;
-  late Null endReleasedDate;
-  late Null deletedAt;
-  late int seasonCount;
-  late Null contentLanguage;
-  late String username;
-  late Null logo;
-  late PortraitThumbs portraitThumbs;
-  late String thumb;
-  late Thumbs thumbs;
-  late List<Categories> categories;
-  late String shareable;
-  late Trailers trailers;
-  late Trailers trailer;
-  late Null favId;
-  late Null isFav;
-  late Null isFavourite;
-  late int firstEpisodeId;
-  late int firstSeasonId;
-  late String year;
-  late int creditsRequiredOrignal;
-  late String currencySymbol;
-  late String contentTypeLabel;
-  late int contentType;
-  late int rate;
-  late bool loggedInUser;
+class Series {
+  String? currentPage;
+  List<SeriesData>? data;
 
-  ListSeries(
-      {required this.seriesId,
-      required this.seriesName,
-      required this.seriesDescription,
-      required this.seriesTags,
-      required this.maturityLevel,
-      required this.category,
-      required this.userid,
-      required this.partnerId,
-      required this.views,
-      required this.dateAdded,
-      required this.featured,
-      required this.broadcast,
-      required this.allowComments,
-      required this.allowRating,
-      required this.totalComments,
-      required this.lastCommented,
-      required this.totalObjects,
-      required this.rating,
-      required this.ratedBy,
-      required this.voters,
-      required this.active,
-      required this.publicUpload,
-      required this.type,
-      required this.fileDirectory,
-      required this.startPublishedDate,
-      required this.endPublishedDate,
-      required this.thumbsUpdatedOn,
-      required this.superFeature,
-      required this.realeaseDate,
-      required this.isAvod,
-      required this.isTvod,
-      required this.isSvod,
-      required this.creditsRequired,
-      required this.rentalHours,
-      required this.overrideDefaultMonetization,
-      required this.startReleasedDate,
-      required this.endReleasedDate,
-      required this.deletedAt,
-      required this.seasonCount,
-      required this.contentLanguage,
-      required this.username,
-      required this.logo,
-      required this.portraitThumbs,
-      required this.thumb,
-      required this.thumbs,
-      required this.categories,
-      required this.shareable,
-      required this.trailers,
-      required this.trailer,
-      required this.favId,
-      required this.isFav,
-      required this.isFavourite,
-      required this.firstEpisodeId,
-      required this.firstSeasonId,
-      required this.year,
-      required this.creditsRequiredOrignal,
-      required this.currencySymbol,
-      required this.contentTypeLabel,
-      required this.contentType,
-      required this.rate,
-      required this.loggedInUser});
+  Series({this.currentPage, this.data});
 
-  ListSeries.fromJson(Map<String, dynamic> json) {
+  Series.fromJson(Map<String, dynamic> json) {
+    currentPage = json['current_page'];
+    if (json['data'] != null) {
+      data = <SeriesData>[];
+      json['data'].forEach((v) {
+        data!.add(new SeriesData.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['current_page'] = this.currentPage;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class SeriesData {
+  int? seriesId;
+  String? seriesName;
+  String? seriesDescription;
+  String? seriesTags;
+  String? maturityLevel;
+  String? category;
+  int? userid;
+  String? partnerId;
+  int? views;
+  String? dateAdded;
+  String? featured;
+  String? broadcast;
+  String? allowComments;
+  String? allowRating;
+  int? totalComments;
+  String? lastCommented;
+  int? totalObjects;
+  int? rating;
+  int? ratedBy;
+  String? voters;
+  String? active;
+  String? publicUpload;
+  String? type;
+  String? fileDirectory;
+  String? startPublishedDate;
+  String? endPublishedDate;
+  String? thumbsUpdatedOn;
+  int? superFeature;
+  String? realeaseDate;
+  int? isAvod;
+  int? isTvod;
+  int? isSvod;
+  String? creditsRequired;
+  int? rentalHours;
+  int? overrideDefaultMonetization;
+  String? startReleasedDate;
+  String? endReleasedDate;
+  String? deletedAt;
+  int? seasonCount;
+  String? contentLanguage;
+  String? username;
+  String? logo;
+  PortraitThumbs? portraitThumbs;
+  String? thumb;
+  Thumbs? thumbs;
+  List<Categories>? categories;
+  String? shareable;
+  Trailers? trailers;
+  Trailers? trailer;
+  String? favId;
+  String? isFav;
+  String? isFavourite;
+  int? firstEpisodeId;
+  int? firstSeasonId;
+  String? year;
+  int? creditsRequiredOrignal;
+  String? currencySymbol;
+  String? contentTypeLabel;
+  int? contentType;
+  int? rate;
+  bool? loggedInUser;
+
+  SeriesData(
+      {this.seriesId,
+      this.seriesName,
+      this.seriesDescription,
+      this.seriesTags,
+      this.maturityLevel,
+      this.category,
+      this.userid,
+      this.partnerId,
+      this.views,
+      this.dateAdded,
+      this.featured,
+      this.broadcast,
+      this.allowComments,
+      this.allowRating,
+      this.totalComments,
+      this.lastCommented,
+      this.totalObjects,
+      this.rating,
+      this.ratedBy,
+      this.voters,
+      this.active,
+      this.publicUpload,
+      this.type,
+      this.fileDirectory,
+      this.startPublishedDate,
+      this.endPublishedDate,
+      this.thumbsUpdatedOn,
+      this.superFeature,
+      this.realeaseDate,
+      this.isAvod,
+      this.isTvod,
+      this.isSvod,
+      this.creditsRequired,
+      this.rentalHours,
+      this.overrideDefaultMonetization,
+      this.startReleasedDate,
+      this.endReleasedDate,
+      this.deletedAt,
+      this.seasonCount,
+      this.contentLanguage,
+      this.username,
+      this.logo,
+      this.portraitThumbs,
+      this.thumb,
+      this.thumbs,
+      this.categories,
+      this.shareable,
+      this.trailers,
+      this.trailer,
+      this.favId,
+      this.isFav,
+      this.isFavourite,
+      this.firstEpisodeId,
+      this.firstSeasonId,
+      this.year,
+      this.creditsRequiredOrignal,
+      this.currencySymbol,
+      this.contentTypeLabel,
+      this.contentType,
+      this.rate,
+      this.loggedInUser});
+
+  SeriesData.fromJson(Map<String, dynamic> json) {
     seriesId = json['series_id'];
     seriesName = json['series_name'];
     seriesDescription = json['series_description'];
@@ -197,13 +218,24 @@ class ListSeries {
     contentLanguage = json['content_language'];
     username = json['username'];
     logo = json['logo'];
+    portraitThumbs = json['portrait_thumbs'] != null
+        ? new PortraitThumbs.fromJson(json['portrait_thumbs'])
+        : null;
+    thumb = json['thumb'];
+    thumbs =
+        json['thumbs'] != null ? new Thumbs.fromJson(json['thumbs']) : null;
     if (json['categories'] != null) {
       categories = <Categories>[];
       json['categories'].forEach((v) {
-        categories.add(new Categories.fromJson(v));
+        categories!.add(new Categories.fromJson(v));
       });
     }
     shareable = json['shareable'];
+    trailers = json['trailers'] != null
+        ? new Trailers.fromJson(json['trailers'])
+        : null;
+    trailer =
+        json['trailer'] != null ? new Trailers.fromJson(json['trailer']) : null;
     favId = json['fav_id'];
     isFav = json['is_fav'];
     isFavourite = json['is_favourite'];
@@ -263,21 +295,21 @@ class ListSeries {
     data['username'] = this.username;
     data['logo'] = this.logo;
     if (this.portraitThumbs != null) {
-      data['portrait_thumbs'] = this.portraitThumbs.toJson();
+      data['portrait_thumbs'] = this.portraitThumbs!.toJson();
     }
     data['thumb'] = this.thumb;
     if (this.thumbs != null) {
-      data['thumbs'] = this.thumbs.toJson();
+      data['thumbs'] = this.thumbs!.toJson();
     }
     if (this.categories != null) {
-      data['categories'] = this.categories.map((v) => v.toJson()).toList();
+      data['categories'] = this.categories!.map((v) => v.toJson()).toList();
     }
     data['shareable'] = this.shareable;
     if (this.trailers != null) {
-      data['trailers'] = this.trailers.toJson();
+      data['trailers'] = this.trailers!.toJson();
     }
     if (this.trailer != null) {
-      data['trailer'] = this.trailer.toJson();
+      data['trailer'] = this.trailer!.toJson();
     }
     data['fav_id'] = this.favId;
     data['is_fav'] = this.isFav;
@@ -296,20 +328,20 @@ class ListSeries {
 }
 
 class PortraitThumbs {
-  late String original;
-  late String s160x240;
-  late String s240x360;
-  late String s320x480;
-  late String s480x720;
-  late String s720x1080;
+  String? original;
+  String? s160x240;
+  String? s240x360;
+  String? s320x480;
+  String? s480x720;
+  String? s720x1080;
 
   PortraitThumbs(
-      {required this.original,
-      required this.s160x240,
-      required this.s240x360,
-      required this.s320x480,
-      required this.s480x720,
-      required this.s720x1080});
+      {this.original,
+      this.s160x240,
+      this.s240x360,
+      this.s320x480,
+      this.s480x720,
+      this.s720x1080});
 
   PortraitThumbs.fromJson(Map<String, dynamic> json) {
     original = json['original'];
@@ -333,24 +365,24 @@ class PortraitThumbs {
 }
 
 class Thumbs {
-  late String original;
-  late String s168x105;
-  late String s416x260;
-  late String s632x395;
-  late String s768x432;
-  late String s1280x720;
-  late String s1920x1080;
-  late String s200x288;
+  String? original;
+  String? s168x105;
+  String? s416x260;
+  String? s632x395;
+  String? s768x432;
+  String? s1280x720;
+  String? s1920x1080;
+  String? s200x288;
 
   Thumbs(
-      {required this.original,
-      required this.s168x105,
-      required this.s416x260,
-      required this.s632x395,
-      required this.s768x432,
-      required this.s1280x720,
-      required this.s1920x1080,
-      required this.s200x288});
+      {this.original,
+      this.s168x105,
+      this.s416x260,
+      this.s632x395,
+      this.s768x432,
+      this.s1280x720,
+      this.s1920x1080,
+      this.s200x288});
 
   Thumbs.fromJson(Map<String, dynamic> json) {
     original = json['original'];
@@ -378,44 +410,44 @@ class Thumbs {
 }
 
 class Categories {
-  late int categoryId;
-  late int parentId;
-  late String categoryName;
-  late int categoryOrder;
-  late String categoryDesc;
-  late String dateAdded;
-  late String categoryThumb;
-  late String featured;
-  late String isdefault;
-  late String navbar;
-  late int isTrailer;
-  late String metaTitle;
-  late Null metaDescription;
-  late String metaKeywords;
-  late String isVideo;
-  late String isSeries;
-  late String isLive;
-  late bool checked;
+  int? categoryId;
+  int? parentId;
+  String? categoryName;
+  int? categoryOrder;
+  String? categoryDesc;
+  String? dateAdded;
+  String? categoryThumb;
+  String? featured;
+  String? isdefault;
+  String? navbar;
+  int? isTrailer;
+  String? metaTitle;
+  String? metaDescription;
+  String? metaKeywords;
+  String? isVideo;
+  String? isSeries;
+  String? isLive;
+  bool? checked;
 
   Categories(
-      {required this.categoryId,
-      required this.parentId,
-      required this.categoryName,
-      required this.categoryOrder,
-      required this.categoryDesc,
-      required this.dateAdded,
-      required this.categoryThumb,
-      required this.featured,
-      required this.isdefault,
-      required this.navbar,
-      required this.isTrailer,
-      required this.metaTitle,
-      required this.metaDescription,
-      required this.metaKeywords,
-      required this.isVideo,
-      required this.isSeries,
-      required this.isLive,
-      required this.checked});
+      {this.categoryId,
+      this.parentId,
+      this.categoryName,
+      this.categoryOrder,
+      this.categoryDesc,
+      this.dateAdded,
+      this.categoryThumb,
+      this.featured,
+      this.isdefault,
+      this.navbar,
+      this.isTrailer,
+      this.metaTitle,
+      this.metaDescription,
+      this.metaKeywords,
+      this.isVideo,
+      this.isSeries,
+      this.isLive,
+      this.checked});
 
   Categories.fromJson(Map<String, dynamic> json) {
     categoryId = json['category_id'];
@@ -463,26 +495,26 @@ class Categories {
 }
 
 class Trailers {
-  late String contentTrailerId;
-  late String trailerId;
-  late String contentId;
-  late String contentType;
-  late String order;
-  late String createdAt;
-  late Null updatedAt;
-  late String active;
-  late String status;
+  String? contentTrailerId;
+  String? trailerId;
+  String? contentId;
+  String? contentType;
+  String? order;
+  String? createdAt;
+  Null? updatedAt;
+  String? active;
+  String? status;
 
   Trailers(
-      {required this.contentTrailerId,
-      required this.trailerId,
-      required this.contentId,
-      required this.contentType,
-      required this.order,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.active,
-      required this.status});
+      {this.contentTrailerId,
+      this.trailerId,
+      this.contentId,
+      this.contentType,
+      this.order,
+      this.createdAt,
+      this.updatedAt,
+      this.active,
+      this.status});
 
   Trailers.fromJson(Map<String, dynamic> json) {
     contentTrailerId = json['content_trailer_id'];

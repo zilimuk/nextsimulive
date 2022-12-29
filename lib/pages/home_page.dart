@@ -1,6 +1,9 @@
 import 'package:simulive/json/home_json.dart';
 
 import 'package:flutter/material.dart';
+import 'package:simulive/movies/model/movie.dart';
+import 'package:simulive/movies/movie_controller.dart';
+import 'package:simulive/movies/trending_controller.dart';
 import 'package:simulive/pages/video_detail_page.dart';
 import 'package:simulive/series/model/series.dart';
 import 'package:simulive/series/series_controller.dart';
@@ -13,7 +16,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final HttpService httpService = HttpService();
+  late Future<SeriesList> listSeries;
+  late Future<Movie> movies;
+  late Future<Movie> myVideoList;
+  late Future<Movie> trendingVideos;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    listSeries = fetchSeries();
+    movies = fetchMovie();
+    // myVideoList = fetchMyList();
+    trendingVideos = fetchTrendingVideo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,21 +53,20 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FutureBuilder(
-                      future: httpService.fetchSeries(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<List<Series>> snapshot) {
+                      future: listSeries,
+                      builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          List<Series> listSeries = snapshot.data!;
-                          print(listSeries);
+                          final SeriesList series = snapshot.data!;
                           return Stack(
                             children: [
                               Container(
                                 height: 500,
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   color: Colors.green,
                                   image: DecorationImage(
-                                    image:
-                                        AssetImage("assets/images/banner.webp"),
+                                    image: NetworkImage(series.series!.data![2]
+                                        .portraitThumbs!.original
+                                        .toString()),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -74,15 +90,16 @@ class _HomePageState extends State<HomePage> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Image.asset(
-                                      "assets/images/title_img.webp",
-                                      width: 300,
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
+                                    // Image.network(
+                                    //   series.listSeries[2].thumbs.original,
+                                    //   width: 250,
+                                    // ),
+                                    // const SizedBox(
+                                    //   height: 15,
+                                    // ),
                                     Text(
-                                      listSeries[0].toString(),
+                                      series.series!.data![2].seriesName
+                                          .toString(),
                                       style: const TextStyle(
                                           fontSize: 11, color: Colors.white),
                                     )
@@ -92,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                             ],
                           );
                         }
-                        return Center(
+                        return const Center(
                           child: CircularProgressIndicator(),
                         );
                       }),
@@ -196,39 +213,61 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Row(
-                            children: List.generate(mylist.length, (index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => const VideoDetailPage(
-                                                videoUrl:
-                                                    "assets/videos/video_1.mp4",
-                                              )));
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  width: 110,
-                                  height: 160,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(mylist[index]['img']),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(6),
+                      FutureBuilder(
+                          future: movies,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<Movie> snapshot) {
+                            if (snapshot.hasData) {
+                              final Movie? listMovies = snapshot.data;
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Row(
+                                    children: List.generate(
+                                        listMovies!.videos!.data!.length,
+                                        (index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const VideoDetailPage(
+                                                        videoUrl:
+                                                            "assets/videos/video_1.mp4",
+                                                      )));
+                                        },
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(right: 8),
+                                          width: 110,
+                                          height: 160,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: NetworkImage(listMovies
+                                                  .videos!
+                                                  .data![index]
+                                                  .thumbs!
+                                                  .s1920x1080
+                                                  .toString()),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                          ),
+                                        ),
+                                      );
+                                    }),
                                   ),
                                 ),
                               );
-                            }),
-                          ),
-                        ),
-                      ),
+                            }
+                            // return SizedBox();
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }),
                       const SizedBox(
                         height: 30,
                       ),
@@ -295,40 +334,58 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Row(
-                            children:
-                                List.generate(trendingList.length, (index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => const VideoDetailPage(
-                                              videoUrl:
-                                                  "assets/videos/video_2.mp4")));
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  width: 110,
-                                  height: 160,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          trendingList[index]['img']),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(6),
+                      FutureBuilder(
+                          future: movies,
+                          builder: (context, AsyncSnapshot<Movie> snapshot) {
+                            if (snapshot.hasData) {
+                              final Movie? trending = snapshot.data;
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Row(
+                                    children: List.generate(
+                                        trending!.videos!.data!.length,
+                                        (index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const VideoDetailPage(
+                                                          videoUrl:
+                                                              "assets/videos/video_2.mp4")));
+                                        },
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(right: 8),
+                                          width: 110,
+                                          height: 160,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: NetworkImage(trending
+                                                  .videos!
+                                                  .data![index]
+                                                  .thumbs!
+                                                  .original
+                                                  .toString()),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                          ),
+                                        ),
+                                      );
+                                    }),
                                   ),
                                 ),
                               );
-                            }),
-                          ),
-                        ),
-                      ),
+                            }
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }),
                       const SizedBox(
                         height: 30,
                       ),
@@ -345,40 +402,58 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Row(
-                            children:
-                                List.generate(originalList.length, (index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => const VideoDetailPage(
-                                              videoUrl:
-                                                  "assets/videos/video_1.mp4")));
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  width: 165,
-                                  height: 300,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          originalList[index]['img']),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(6),
+                      FutureBuilder(
+                          future: listSeries,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              final SeriesList? listSeries = snapshot.data;
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Row(
+                                    children: List.generate(
+                                        listSeries!.series!.data!.length,
+                                        (index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const VideoDetailPage(
+                                                          videoUrl:
+                                                              "assets/videos/video_1.mp4")));
+                                        },
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(right: 8),
+                                          width: 165,
+                                          height: 300,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: NetworkImage(listSeries!
+                                                  .series!
+                                                  .data![index]
+                                                  .portraitThumbs!
+                                                  .original
+                                                  .toString()),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                          ),
+                                        ),
+                                      );
+                                    }),
                                   ),
                                 ),
                               );
-                            }),
-                          ),
-                        ),
-                      ),
+                            }
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }),
                       const SizedBox(
                         height: 30,
                       ),
@@ -395,39 +470,58 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Row(
-                            children: List.generate(animeList.length, (index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => const VideoDetailPage(
-                                              videoUrl:
-                                                  "assets/videos/video_2.mp4")));
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  width: 110,
-                                  height: 160,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image:
-                                          AssetImage(animeList[index]['img']),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(6),
+                      FutureBuilder(
+                          future: movies,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              final Movie? movieList = snapshot.data;
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Row(
+                                    children: List.generate(
+                                        movieList!.videos!.data!.length,
+                                        (index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const VideoDetailPage(
+                                                          videoUrl:
+                                                              "assets/videos/video_2.mp4")));
+                                        },
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(right: 8),
+                                          width: 110,
+                                          height: 160,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: NetworkImage(movieList!
+                                                  .videos!
+                                                  .data![index]
+                                                  .thumbs!
+                                                  .original
+                                                  .toString()),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                          ),
+                                        ),
+                                      );
+                                    }),
                                   ),
                                 ),
                               );
-                            }),
-                          ),
-                        ),
-                      ),
+                            }
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }),
                     ],
                   )
                 ],
