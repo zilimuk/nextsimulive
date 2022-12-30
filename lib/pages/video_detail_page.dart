@@ -17,7 +17,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controller = VideoPlayerController.asset(widget.videoUrl)
+    _controller = VideoPlayerController.network(widget.videoUrl)
       ..initialize().then((_) {
         setState(() {
           _controller.play();

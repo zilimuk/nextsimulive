@@ -1,20 +1,19 @@
-class Movie {
+class TrendingVideo {
   int? status;
   String? message;
-  Videos? videos;
+  TrendingVideoList? videos;
   String? time;
 
-  Movie({this.status, this.message, this.videos, this.time});
+  TrendingVideo({this.status, this.message, this.videos, this.time});
 
-  Movie.fromJson(Map<String, dynamic> json) {
+  TrendingVideo.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    videos =
-        json['videos'] != null ? new Videos.fromJson(json['videos']) : null;
+    videos = json['videos'] != null
+        ? TrendingVideoList.fromJson(json['videos'])
+        : null;
     time = json['time'];
   }
-
-  get data => null;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -28,9 +27,29 @@ class Movie {
   }
 }
 
-class Videos {
+class TrendingVideoList {
+  Trending? trending;
+
+  TrendingVideoList({this.trending});
+
+  TrendingVideoList.fromJson(Map<String, dynamic> json) {
+    trending = json['trending'] != null
+        ? new Trending.fromJson(json['trending'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.trending != null) {
+      data['trending'] = this.trending!.toJson();
+    }
+    return data;
+  }
+}
+
+class Trending {
   int? currentPage;
-  List<Data>? data;
+  List<TrendingData>? data;
   String? firstPageUrl;
   int? from;
   int? lastPage;
@@ -42,7 +61,7 @@ class Videos {
   int? to;
   int? total;
 
-  Videos(
+  Trending(
       {this.currentPage,
       this.data,
       this.firstPageUrl,
@@ -56,12 +75,12 @@ class Videos {
       this.to,
       this.total});
 
-  Videos.fromJson(Map<String, dynamic> json) {
+  Trending.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <TrendingData>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(new TrendingData.fromJson(v));
       });
     }
     firstPageUrl = json['first_page_url'];
@@ -96,7 +115,7 @@ class Videos {
   }
 }
 
-class Data {
+class TrendingData {
   int? videoid;
   String? videokey;
   String? videoPassword;
@@ -207,8 +226,8 @@ class Data {
   String? dvrBackupTimezone;
   String? dvrBackupDuration;
   String? epgDvrCatchupUrl;
-  String? isFavourite;
   String? logo;
+  TrendingVideoPortraitThumbs? portraitThumbs;
   Thumbs? thumbs;
   String? gif;
   List<String>? files;
@@ -216,22 +235,22 @@ class Data {
   String? year;
   String? durationInSeconds;
   int? rate;
-  String? trailers;
+  dynamic trailers;
   String? favId;
   String? isFav;
   String? url;
   String? shareable;
   List<Categories>? categories;
-  String? loggedInUser;
   Quality? quality;
   String? interval;
+  TrendingVideoSeries? series;
   String? priceTag;
   bool? showPremiumBadge;
   bool? canPreOrder;
   String? availabilityDate;
   String? contentTypeLabel;
 
-  Data(
+  TrendingData(
       {this.videoid,
       this.videokey,
       this.videoPassword,
@@ -342,8 +361,8 @@ class Data {
       this.dvrBackupTimezone,
       this.dvrBackupDuration,
       this.epgDvrCatchupUrl,
-      this.isFavourite,
       this.logo,
+      this.portraitThumbs,
       this.thumbs,
       this.gif,
       this.files,
@@ -357,16 +376,16 @@ class Data {
       this.url,
       this.shareable,
       this.categories,
-      this.loggedInUser,
       this.quality,
       this.interval,
+      this.series,
       this.priceTag,
       this.showPremiumBadge,
       this.canPreOrder,
       this.availabilityDate,
       this.contentTypeLabel});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  TrendingData.fromJson(Map<String, dynamic> json) {
     videoid = json['videoid'];
     videokey = json['videokey'];
     videoPassword = json['video_password'];
@@ -477,10 +496,8 @@ class Data {
     dvrBackupTimezone = json['dvr_backup_timezone'];
     dvrBackupDuration = json['dvr_backup_duration'];
     epgDvrCatchupUrl = json['epg_dvr_catchup_url'];
-    isFavourite = json['is_favourite'];
     logo = json['logo'];
-    thumbs =
-        json['thumbs'] != null ? new Thumbs.fromJson(json['thumbs']) : null;
+    thumbs = json['thumbs'] != null ? Thumbs.fromJson(json['thumbs']) : null;
     gif = json['gif'];
     files = json['files'].cast<String>();
     watchUrl = json['watch_url'];
@@ -491,17 +508,18 @@ class Data {
     favId = json['fav_id'];
     isFav = json['is_fav'];
     url = json['url'];
-    shareable = json['shareable'];
     if (json['categories'] != null) {
       categories = <Categories>[];
       json['categories'].forEach((v) {
         categories!.add(new Categories.fromJson(v));
       });
     }
-    loggedInUser = json['logged_in_user'];
     quality =
         json['quality'] != null ? new Quality.fromJson(json['quality']) : null;
     interval = json['interval'];
+    series = json['series'] != null
+        ? TrendingVideoSeries.fromJson(json['series'])
+        : null;
     priceTag = json['price_tag'];
     showPremiumBadge = json['show_premium_badge'];
     canPreOrder = json['can_pre_order'];
@@ -621,8 +639,10 @@ class Data {
     data['dvr_backup_timezone'] = this.dvrBackupTimezone;
     data['dvr_backup_duration'] = this.dvrBackupDuration;
     data['epg_dvr_catchup_url'] = this.epgDvrCatchupUrl;
-    data['is_favourite'] = this.isFavourite;
     data['logo'] = this.logo;
+    if (this.portraitThumbs != null) {
+      data['portrait_thumbs'] = this.portraitThumbs!.toJson();
+    }
     if (this.thumbs != null) {
       data['thumbs'] = this.thumbs!.toJson();
     }
@@ -640,16 +660,55 @@ class Data {
     if (this.categories != null) {
       data['categories'] = this.categories!.map((v) => v.toJson()).toList();
     }
-    data['logged_in_user'] = this.loggedInUser;
     if (this.quality != null) {
       data['quality'] = this.quality!.toJson();
     }
     data['interval'] = this.interval;
+    if (this.series != null) {
+      data['series'] = this.series!.toJson();
+    }
     data['price_tag'] = this.priceTag;
     data['show_premium_badge'] = this.showPremiumBadge;
     data['can_pre_order'] = this.canPreOrder;
     data['availability_date'] = this.availabilityDate;
     data['content_type_label'] = this.contentTypeLabel;
+    return data;
+  }
+}
+
+class TrendingVideoPortraitThumbs {
+  String? original;
+  String? s160x240;
+  String? s240x360;
+  String? s320x480;
+  String? s480x720;
+  String? s720x1080;
+
+  TrendingVideoPortraitThumbs(
+      {this.original,
+      this.s160x240,
+      this.s240x360,
+      this.s320x480,
+      this.s480x720,
+      this.s720x1080});
+
+  TrendingVideoPortraitThumbs.fromJson(Map<String, dynamic> json) {
+    original = json['original'];
+    s160x240 = json['160x240'];
+    s240x360 = json['240x360'];
+    s320x480 = json['320x480'];
+    s480x720 = json['480x720'];
+    s720x1080 = json['720x1080'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['original'] = this.original;
+    data['160x240'] = this.s160x240;
+    data['240x360'] = this.s240x360;
+    data['320x480'] = this.s320x480;
+    data['480x720'] = this.s480x720;
+    data['720x1080'] = this.s720x1080;
     return data;
   }
 }
@@ -795,6 +854,187 @@ class Quality {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['hd'] = this.hd;
     data['uhd'] = this.uhd;
+    return data;
+  }
+}
+
+class TrendingVideoSeries {
+  int? seriesId;
+  String? seriesName;
+  String? seriesDescription;
+  String? seriesTags;
+  String? maturityLevel;
+  String? category;
+  int? userid;
+  int? partnerId;
+  int? views;
+  String? dateAdded;
+  String? featured;
+  String? broadcast;
+  String? allowComments;
+  String? allowRating;
+  int? totalComments;
+  String? lastCommented;
+  int? totalObjects;
+  int? rating;
+  int? ratedBy;
+  String? voters;
+  String? active;
+  String? publicUpload;
+  String? type;
+  String? fileDirectory;
+  String? startPublishedDate;
+  String? endPublishedDate;
+  int? superFeature;
+  String? realeaseDate;
+  int? isAvod;
+  int? isTvod;
+  int? isSvod;
+  String? creditsRequired;
+  int? rentalHours;
+  int? overrideDefaultMonetization;
+  String? startReleasedDate;
+  String? endReleasedDate;
+  String? deletedAt;
+  int? seasonCount;
+  String? contentLanguage;
+  String? priceTag;
+  String? contentTypeLabel;
+  String? title;
+
+  TrendingVideoSeries(
+      {this.seriesId,
+      this.seriesName,
+      this.seriesDescription,
+      this.seriesTags,
+      this.maturityLevel,
+      this.category,
+      this.userid,
+      this.partnerId,
+      this.views,
+      this.dateAdded,
+      this.featured,
+      this.broadcast,
+      this.allowComments,
+      this.allowRating,
+      this.totalComments,
+      this.lastCommented,
+      this.totalObjects,
+      this.rating,
+      this.ratedBy,
+      this.voters,
+      this.active,
+      this.publicUpload,
+      this.type,
+      this.fileDirectory,
+      this.startPublishedDate,
+      this.endPublishedDate,
+      this.superFeature,
+      this.realeaseDate,
+      this.isAvod,
+      this.isTvod,
+      this.isSvod,
+      this.creditsRequired,
+      this.rentalHours,
+      this.overrideDefaultMonetization,
+      this.startReleasedDate,
+      this.endReleasedDate,
+      this.deletedAt,
+      this.seasonCount,
+      this.contentLanguage,
+      this.priceTag,
+      this.contentTypeLabel,
+      this.title});
+
+  TrendingVideoSeries.fromJson(Map<String, dynamic> json) {
+    seriesId = json['series_id'];
+    seriesName = json['series_name'];
+    seriesDescription = json['series_description'];
+    seriesTags = json['series_tags'];
+    maturityLevel = json['maturity_level'];
+    category = json['category'];
+    userid = json['userid'];
+    partnerId = json['partner_id'];
+    views = json['views'];
+    dateAdded = json['date_added'];
+    featured = json['featured'];
+    broadcast = json['broadcast'];
+    allowComments = json['allow_comments'];
+    allowRating = json['allow_rating'];
+    totalComments = json['total_comments'];
+    lastCommented = json['last_commented'];
+    totalObjects = json['total_objects'];
+    rating = json['rating'];
+    ratedBy = json['rated_by'];
+    voters = json['voters'];
+    active = json['active'];
+    publicUpload = json['public_upload'];
+    type = json['type'];
+    fileDirectory = json['file_directory'];
+    startPublishedDate = json['start_published_date'];
+    endPublishedDate = json['end_published_date'];
+    superFeature = json['super_feature'];
+    realeaseDate = json['realease_date'];
+    isAvod = json['is_avod'];
+    isTvod = json['is_tvod'];
+    isSvod = json['is_svod'];
+    creditsRequired = json['credits_required'];
+    rentalHours = json['rental_hours'];
+    overrideDefaultMonetization = json['override_default_monetization'];
+    startReleasedDate = json['start_released_date'];
+    endReleasedDate = json['end_released_date'];
+    deletedAt = json['deleted_at'];
+    seasonCount = json['season_count'];
+    contentLanguage = json['content_language'];
+    priceTag = json['price_tag'];
+    contentTypeLabel = json['content_type_label'];
+    title = json['title'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['series_id'] = this.seriesId;
+    data['series_name'] = this.seriesName;
+    data['series_description'] = this.seriesDescription;
+    data['series_tags'] = this.seriesTags;
+    data['maturity_level'] = this.maturityLevel;
+    data['category'] = this.category;
+    data['userid'] = this.userid;
+    data['partner_id'] = this.partnerId;
+    data['views'] = this.views;
+    data['date_added'] = this.dateAdded;
+    data['featured'] = this.featured;
+    data['broadcast'] = this.broadcast;
+    data['allow_comments'] = this.allowComments;
+    data['allow_rating'] = this.allowRating;
+    data['total_comments'] = this.totalComments;
+    data['last_commented'] = this.lastCommented;
+    data['total_objects'] = this.totalObjects;
+    data['rating'] = this.rating;
+    data['rated_by'] = this.ratedBy;
+    data['voters'] = this.voters;
+    data['active'] = this.active;
+    data['public_upload'] = this.publicUpload;
+    data['type'] = this.type;
+    data['file_directory'] = this.fileDirectory;
+    data['start_published_date'] = this.startPublishedDate;
+    data['end_published_date'] = this.endPublishedDate;
+    data['super_feature'] = this.superFeature;
+    data['realease_date'] = this.realeaseDate;
+    data['is_avod'] = this.isAvod;
+    data['is_tvod'] = this.isTvod;
+    data['is_svod'] = this.isSvod;
+    data['credits_required'] = this.creditsRequired;
+    data['rental_hours'] = this.rentalHours;
+    data['override_default_monetization'] = this.overrideDefaultMonetization;
+    data['start_released_date'] = this.startReleasedDate;
+    data['end_released_date'] = this.endReleasedDate;
+    data['deleted_at'] = this.deletedAt;
+    data['season_count'] = this.seasonCount;
+    data['content_language'] = this.contentLanguage;
+    data['price_tag'] = this.priceTag;
+    data['content_type_label'] = this.contentTypeLabel;
+    data['title'] = this.title;
     return data;
   }
 }

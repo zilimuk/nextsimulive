@@ -1,7 +1,7 @@
-import 'package:simulive/json/home_json.dart';
-
 import 'package:flutter/material.dart';
 import 'package:simulive/movies/model/movie.dart';
+import 'package:simulive/movies/model/trending_movie.dart';
+import 'package:simulive/movies/model/video_streaming.dart';
 import 'package:simulive/movies/movie_controller.dart';
 import 'package:simulive/movies/trending_controller.dart';
 import 'package:simulive/pages/video_detail_page.dart';
@@ -19,7 +19,8 @@ class _HomePageState extends State<HomePage> {
   late Future<SeriesList> listSeries;
   late Future<Movie> movies;
   late Future<Movie> myVideoList;
-  late Future<Movie> trendingVideos;
+  late Future<TrendingVideo> trendingVideos;
+  late Future<StreamingUrl> streamingUrl;
 
   @override
   void initState() {
@@ -143,7 +144,8 @@ class _HomePageState extends State<HomePage> {
                               context,
                               MaterialPageRoute(
                                   builder: (_) => const VideoDetailPage(
-                                        videoUrl: "assets/videos/video_1.mp4",
+                                        videoUrl:
+                                            "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8",
                                       )));
                         },
                         child: Container(
@@ -227,37 +229,53 @@ class _HomePageState extends State<HomePage> {
                                     children: List.generate(
                                         listMovies!.videos!.data!.length,
                                         (index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      const VideoDetailPage(
-                                                        videoUrl:
-                                                            "assets/videos/video_1.mp4",
-                                                      )));
-                                        },
-                                        child: Container(
-                                          margin:
-                                              const EdgeInsets.only(right: 8),
-                                          width: 110,
-                                          height: 160,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(listMovies
-                                                  .videos!
-                                                  .data![index]
-                                                  .thumbs!
-                                                  .s1920x1080
+                                      return FutureBuilder(
+                                          future: streamingUrl = fetchVideoLink(
+                                              listMovies
+                                                  .videos!.data![index].videokey
                                                   .toString()),
-                                              fit: BoxFit.cover,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
-                                          ),
-                                        ),
-                                      );
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              final StreamingUrl?
+                                                  videostreaming =
+                                                  snapshot!.data;
+
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (_) =>
+                                                              const VideoDetailPage(
+                                                                videoUrl:
+                                                                    "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8",
+                                                              )));
+                                                },
+                                                child: Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 8),
+                                                  width: 110,
+                                                  height: 160,
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: NetworkImage(
+                                                          listMovies
+                                                              .videos!
+                                                              .data![index]
+                                                              .thumbs!
+                                                              .s1920x1080
+                                                              .toString()),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                            return const SizedBox();
+                                          });
                                     }),
                                   ),
                                 ),
@@ -284,40 +302,59 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Row(
-                            children:
-                                List.generate(popularList.length, (index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => const VideoDetailPage(
-                                              videoUrl:
-                                                  "assets/videos/video_2.mp4")));
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  width: 110,
-                                  height: 160,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image:
-                                          AssetImage(popularList[index]['img']),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(6),
+                      FutureBuilder(
+                          future: movies,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              final Movie? popularList = snapshot!.data;
+
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Row(
+                                    children: List.generate(
+                                        popularList!.videos!.data!.length,
+                                        (index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const VideoDetailPage(
+                                                          videoUrl:
+                                                              "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
+                                        },
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(right: 8),
+                                          width: 110,
+                                          height: 160,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: NetworkImage(popularList
+                                                  .videos!
+                                                  .data![index]
+                                                  .thumbs!
+                                                  .original
+                                                  .toString()),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                          ),
+                                        ),
+                                      );
+                                    }),
                                   ),
                                 ),
                               );
-                            }),
-                          ),
-                        ),
-                      ),
+                            }
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }),
                       const SizedBox(
                         height: 30,
                       ),
@@ -335,18 +372,18 @@ class _HomePageState extends State<HomePage> {
                         height: 8,
                       ),
                       FutureBuilder(
-                          future: movies,
-                          builder: (context, AsyncSnapshot<Movie> snapshot) {
+                          future: trendingVideos,
+                          builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              final Movie? trending = snapshot.data;
+                              final TrendingVideo? trending = snapshot.data;
                               return SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Row(
                                     children: List.generate(
-                                        trending!.videos!.data!.length,
-                                        (index) {
+                                        trending!.videos!.trending!.data!
+                                            .length, (index) {
                                       return GestureDetector(
                                         onTap: () {
                                           Navigator.push(
@@ -355,7 +392,7 @@ class _HomePageState extends State<HomePage> {
                                                   builder: (_) =>
                                                       const VideoDetailPage(
                                                           videoUrl:
-                                                              "assets/videos/video_2.mp4")));
+                                                              "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
                                         },
                                         child: Container(
                                           margin:
@@ -366,6 +403,7 @@ class _HomePageState extends State<HomePage> {
                                             image: DecorationImage(
                                               image: NetworkImage(trending
                                                   .videos!
+                                                  .trending!
                                                   .data![index]
                                                   .thumbs!
                                                   .original
@@ -423,7 +461,7 @@ class _HomePageState extends State<HomePage> {
                                                   builder: (_) =>
                                                       const VideoDetailPage(
                                                           videoUrl:
-                                                              "assets/videos/video_1.mp4")));
+                                                              "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
                                         },
                                         child: Container(
                                           margin:
@@ -491,7 +529,7 @@ class _HomePageState extends State<HomePage> {
                                                   builder: (_) =>
                                                       const VideoDetailPage(
                                                           videoUrl:
-                                                              "assets/videos/video_2.mp4")));
+                                                              "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
                                         },
                                         child: Container(
                                           margin:
