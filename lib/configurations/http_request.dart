@@ -7,20 +7,14 @@ class HttpRequest {
   //https://simulive.co.tz/api/videos/myList?page=1&limit=1&paginate=1
   static String trendingVideoUri = "/api/videos/list/?";
   // https://simulive.co.tz/api/videos/list/trending&paginate=1&limit=5&page=1
-  static String videoLink =
-      "https://encode.simulive.co.tz/api/v1/filename?key=";
+  static String videoLinkUri = "/api/v2/videos/";
+  static String videoLinkUri_2 = "/playable";
 
-  static streamVideoUrl(String videoKey) {
-    // X-Authorization: 6SoeJkodMvBqKvSgx8bl0h6pA1PNCJ6qAK6JLEM5oTFKgBRceCWWUP7YW4IGMHob
-    // X-Authorization-Secret: aPpeSSII3apLqFlAbPmJsnoA5BWaOGOK6NYE4rrxDxrBA6hel6qHEMHhUeWWpKAI
-    Map<String, dynamic> data = {
-      "url": "$videoLink$videoKey",
-      "X-Authorization":
-          "6SoeJkodMvBqKvSgx8bl0h6pA1PNCJ6qAK6JLEM5oTFKgBRceCWWUP7YW4IGMHob",
-      "X-Authorization-Secret":
-          "aPpeSSII3apLqFlAbPmJsnoA5BWaOGOK6NYE4rrxDxrBA6hel6qHEMHhUeWWpKAI"
-    };
-    return data;
+  static streamVideoUrl(String videoId, String token) {
+    String url = baseUrl + videoLinkUri + videoId + videoLinkUri_2;
+    Map<String, dynamic> headers = <String, dynamic>{};
+    headers['Authorization'] = '"' + token + '"';
+    return '$url,$headers';
   }
 
   static movieUrl(int categories, int paginate, int limit, int page) {

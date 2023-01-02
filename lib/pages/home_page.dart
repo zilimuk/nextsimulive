@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   late Future<Movie> movies;
   late Future<Movie> myVideoList;
   late Future<TrendingVideo> trendingVideos;
-  late Future<StreamingUrl> streamingUrl;
+  late Future<VideoStreaming> streamingUrl;
 
   @override
   void initState() {
@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     listSeries = fetchSeries();
     movies = fetchMovie();
+    // streamingUrl = fetchVideoLink(videokey)
     // myVideoList = fetchMyList();
     trendingVideos = fetchTrendingVideo();
   }
@@ -230,52 +231,56 @@ class _HomePageState extends State<HomePage> {
                                         listMovies!.videos!.data!.length,
                                         (index) {
                                       return FutureBuilder(
-                                          future: streamingUrl = fetchVideoLink(
-                                              listMovies
-                                                  .videos!.data![index].videokey
-                                                  .toString()),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.hasData) {
-                                              final StreamingUrl?
-                                                  videostreaming =
-                                                  snapshot!.data;
-
-                                              return GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (_) =>
-                                                              const VideoDetailPage(
-                                                                videoUrl:
-                                                                    "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8",
-                                                              )));
-                                                },
-                                                child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                      right: 8),
-                                                  width: 110,
-                                                  height: 160,
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          listMovies
-                                                              .videos!
-                                                              .data![index]
-                                                              .thumbs!
-                                                              .s1920x1080
-                                                              .toString()),
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            6),
+                                        future: streamingUrl = fetchVideoLink(
+                                            listMovies
+                                                .videos!.data![index].videoid
+                                                .toString()),
+                                        builder: ((context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            final VideoStreaming?
+                                                listVideoLinks = snapshot.data;
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (_) =>
+                                                            const VideoDetailPage(
+                                                              videoUrl:
+                                                                  "https://bstream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8",
+                                                            )));
+                                              },
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                    right: 8),
+                                                width: 110,
+                                                height: 160,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: NetworkImage(
+                                                        listMovies
+                                                            .videos!
+                                                            .data![index]
+                                                            .thumbs!
+                                                            .s1920x1080
+                                                            .toString()),
+                                                    fit: BoxFit.cover,
                                                   ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
                                                 ),
-                                              );
-                                            }
-                                            return const SizedBox();
-                                          });
+                                              ),
+                                            );
+                                          }
+                                          return const Center(
+                                            child: Text(
+                                              "No video found",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          );
+                                        }),
+                                      );
                                     }),
                                   ),
                                 ),
