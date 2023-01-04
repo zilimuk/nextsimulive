@@ -9,6 +9,11 @@ class HttpRequest {
   // https://simulive.co.tz/api/videos/list/trending&paginate=1&limit=5&page=1
   static String videoLinkUri = "/api/v2/videos/";
   static String videoLinkUri_2 = "/playable";
+  static String loginUri = "/api/users/signin";
+
+  static loginUrl() {
+    return baseUrl + loginUri;
+  }
 
   static streamVideoUrl(String videoId, String token) {
     String url = baseUrl + videoLinkUri + videoId + videoLinkUri_2;
