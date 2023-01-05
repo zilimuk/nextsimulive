@@ -9,21 +9,20 @@ class Movie {
   Movie.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    videos =
-        json['videos'] != null ? new Videos.fromJson(json['videos']) : null;
+    videos = json['videos'] != null ? Videos.fromJson(json['videos']) : null;
     time = json['time'];
   }
 
   get data => null;
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.videos != null) {
-      data['videos'] = this.videos!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    if (videos != null) {
+      data['videos'] = videos!.toJson();
     }
-    data['time'] = this.time;
+    data['time'] = time;
     return data;
   }
 }
@@ -61,7 +60,7 @@ class Videos {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
     firstPageUrl = json['first_page_url'];
@@ -77,21 +76,21 @@ class Videos {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['current_page'] = this.currentPage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['current_page'] = currentPage;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['first_page_url'] = this.firstPageUrl;
-    data['from'] = this.from;
-    data['last_page'] = this.lastPage;
-    data['last_page_url'] = this.lastPageUrl;
-    data['next_page_url'] = this.nextPageUrl;
-    data['path'] = this.path;
-    data['per_page'] = this.perPage;
-    data['prev_page_url'] = this.prevPageUrl;
-    data['to'] = this.to;
-    data['total'] = this.total;
+    data['first_page_url'] = firstPageUrl;
+    data['from'] = from;
+    data['last_page'] = lastPage;
+    data['last_page_url'] = lastPageUrl;
+    data['next_page_url'] = nextPageUrl;
+    data['path'] = path;
+    data['per_page'] = perPage;
+    data['prev_page_url'] = prevPageUrl;
+    data['to'] = to;
+    data['total'] = total;
     return data;
   }
 }
@@ -479,8 +478,7 @@ class Data {
     epgDvrCatchupUrl = json['epg_dvr_catchup_url'];
     isFavourite = json['is_favourite'];
     logo = json['logo'];
-    thumbs =
-        json['thumbs'] != null ? new Thumbs.fromJson(json['thumbs']) : null;
+    thumbs = json['thumbs'] != null ? Thumbs.fromJson(json['thumbs']) : null;
     gif = json['gif'];
     files = json['files'].cast<String>();
     watchUrl = json['watch_url'];
@@ -495,12 +493,12 @@ class Data {
     if (json['categories'] != null) {
       categories = <Categories>[];
       json['categories'].forEach((v) {
-        categories!.add(new Categories.fromJson(v));
+        categories!.add(Categories.fromJson(v));
       });
     }
     loggedInUser = json['logged_in_user'];
     quality =
-        json['quality'] != null ? new Quality.fromJson(json['quality']) : null;
+        json['quality'] != null ? Quality.fromJson(json['quality']) : null;
     interval = json['interval'];
     priceTag = json['price_tag'];
     showPremiumBadge = json['show_premium_badge'];
@@ -510,146 +508,146 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['videoid'] = this.videoid;
-    data['videokey'] = this.videokey;
-    data['video_password'] = this.videoPassword;
-    data['video_users'] = this.videoUsers;
-    data['username'] = this.username;
-    data['userid'] = this.userid;
-    data['partner_id'] = this.partnerId;
-    data['maturity_level'] = this.maturityLevel;
-    data['title'] = this.title;
-    data['file_name'] = this.fileName;
-    data['file_type'] = this.fileType;
-    data['description'] = this.description;
-    data['tags'] = this.tags;
-    data['category'] = this.category;
-    data['category_parents'] = this.categoryParents;
-    data['broadcast'] = this.broadcast;
-    data['location'] = this.location;
-    data['datecreated'] = this.datecreated;
-    data['country'] = this.country;
-    data['blocked_countries'] = this.blockedCountries;
-    data['allowed_countries'] = this.allowedCountries;
-    data['sprite_count'] = this.spriteCount;
-    data['season_id'] = this.seasonId;
-    data['series_id'] = this.seriesId;
-    data['sequence'] = this.sequence;
-    data['allow_embedding'] = this.allowEmbedding;
-    data['rating'] = this.rating;
-    data['rated_by'] = this.ratedBy;
-    data['voter_ids'] = this.voterIds;
-    data['featured'] = this.featured;
-    data['featured_order'] = this.featuredOrder;
-    data['featured_date'] = this.featuredDate;
-    data['featured_description'] = this.featuredDescription;
-    data['allow_rating'] = this.allowRating;
-    data['allow_comments'] = this.allowComments;
-    data['comments_count'] = this.commentsCount;
-    data['last_commented'] = this.lastCommented;
-    data['active'] = this.active;
-    data['favourite_count'] = this.favouriteCount;
-    data['playlist_count'] = this.playlistCount;
-    data['views'] = this.views;
-    data['last_viewed'] = this.lastViewed;
-    data['date_added'] = this.dateAdded;
-    data['flagged'] = this.flagged;
-    data['duration'] = this.duration;
-    data['status'] = this.status;
-    data['failed_reason'] = this.failedReason;
-    data['default_thumb'] = this.defaultThumb;
-    data['aspect_ratio'] = this.aspectRatio;
-    data['embed_code'] = this.embedCode;
-    data['refer_url'] = this.referUrl;
-    data['downloads'] = this.downloads;
-    data['uploader_ip'] = this.uploaderIp;
-    data['mass_embed_status'] = this.massEmbedStatus;
-    data['unique_embed_code'] = this.uniqueEmbedCode;
-    data['remote_play_url'] = this.remotePlayUrl;
-    data['video_files'] = this.videoFiles;
-    data['server_ip'] = this.serverIp;
-    data['file_server_path'] = this.fileServerPath;
-    data['file_directory'] = this.fileDirectory;
-    data['files_thumbs_path'] = this.filesThumbsPath;
-    data['file_thumbs_count'] = this.fileThumbsCount;
-    data['has_hq'] = this.hasHq;
-    data['filegrp_size'] = this.filegrpSize;
-    data['process_status'] = this.processStatus;
-    data['video_version'] = this.videoVersion;
-    data['extras'] = this.extras;
-    data['subscription_email'] = this.subscriptionEmail;
-    data['thumbs_version'] = this.thumbsVersion;
-    data['re_conv_status'] = this.reConvStatus;
-    data['conv_progress'] = this.convProgress;
-    data['is_premium'] = this.isPremium;
-    data['override_default_monetization'] = this.overrideDefaultMonetization;
-    data['credits_required'] = this.creditsRequired;
-    data['rental_hours'] = this.rentalHours;
-    data['premium_cid'] = this.premiumCid;
-    data['in_editor_pick'] = this.inEditorPick;
-    data['has_subs'] = this.hasSubs;
-    data['total_subs'] = this.totalSubs;
-    data['last_sub_num'] = this.lastSubNum;
-    data['live'] = this.live;
-    data['udp_live'] = this.udpLive;
-    data['force_hls_http_url'] = this.forceHlsHttpUrl;
-    data['start_published_date'] = this.startPublishedDate;
-    data['end_published_date'] = this.endPublishedDate;
-    data['has_sprite'] = this.hasSprite;
-    data['version'] = this.version;
-    data['has_resulotion'] = this.hasResulotion;
-    data['aws_service_id'] = this.awsServiceId;
-    data['aws_cdn'] = this.awsCdn;
-    data['aws_thumb_path'] = this.awsThumbPath;
-    data['license_by'] = this.licenseBy;
-    data['is_channeHome'] = this.isChanneHome;
-    data['content_type'] = this.contentType;
-    data['super_feature'] = this.superFeature;
-    data['is_avod'] = this.isAvod;
-    data['is_tvod'] = this.isTvod;
-    data['pre_order'] = this.preOrder;
-    data['live_status'] = this.liveStatus;
-    data['deleted_at'] = this.deletedAt;
-    data['is_360'] = this.is360;
-    data['projection_type'] = this.projectionType;
-    data['epg_channel_id'] = this.epgChannelId;
-    data['drm_protected'] = this.drmProtected;
-    data['epg_url'] = this.epgUrl;
-    data['content_language'] = this.contentLanguage;
-    data['dvr_url'] = this.dvrUrl;
-    data['dvr_backup_timezone'] = this.dvrBackupTimezone;
-    data['dvr_backup_duration'] = this.dvrBackupDuration;
-    data['epg_dvr_catchup_url'] = this.epgDvrCatchupUrl;
-    data['is_favourite'] = this.isFavourite;
-    data['logo'] = this.logo;
-    if (this.thumbs != null) {
-      data['thumbs'] = this.thumbs!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['videoid'] = videoid;
+    data['videokey'] = videokey;
+    data['video_password'] = videoPassword;
+    data['video_users'] = videoUsers;
+    data['username'] = username;
+    data['userid'] = userid;
+    data['partner_id'] = partnerId;
+    data['maturity_level'] = maturityLevel;
+    data['title'] = title;
+    data['file_name'] = fileName;
+    data['file_type'] = fileType;
+    data['description'] = description;
+    data['tags'] = tags;
+    data['category'] = category;
+    data['category_parents'] = categoryParents;
+    data['broadcast'] = broadcast;
+    data['location'] = location;
+    data['datecreated'] = datecreated;
+    data['country'] = country;
+    data['blocked_countries'] = blockedCountries;
+    data['allowed_countries'] = allowedCountries;
+    data['sprite_count'] = spriteCount;
+    data['season_id'] = seasonId;
+    data['series_id'] = seriesId;
+    data['sequence'] = sequence;
+    data['allow_embedding'] = allowEmbedding;
+    data['rating'] = rating;
+    data['rated_by'] = ratedBy;
+    data['voter_ids'] = voterIds;
+    data['featured'] = featured;
+    data['featured_order'] = featuredOrder;
+    data['featured_date'] = featuredDate;
+    data['featured_description'] = featuredDescription;
+    data['allow_rating'] = allowRating;
+    data['allow_comments'] = allowComments;
+    data['comments_count'] = commentsCount;
+    data['last_commented'] = lastCommented;
+    data['active'] = active;
+    data['favourite_count'] = favouriteCount;
+    data['playlist_count'] = playlistCount;
+    data['views'] = views;
+    data['last_viewed'] = lastViewed;
+    data['date_added'] = dateAdded;
+    data['flagged'] = flagged;
+    data['duration'] = duration;
+    data['status'] = status;
+    data['failed_reason'] = failedReason;
+    data['default_thumb'] = defaultThumb;
+    data['aspect_ratio'] = aspectRatio;
+    data['embed_code'] = embedCode;
+    data['refer_url'] = referUrl;
+    data['downloads'] = downloads;
+    data['uploader_ip'] = uploaderIp;
+    data['mass_embed_status'] = massEmbedStatus;
+    data['unique_embed_code'] = uniqueEmbedCode;
+    data['remote_play_url'] = remotePlayUrl;
+    data['video_files'] = videoFiles;
+    data['server_ip'] = serverIp;
+    data['file_server_path'] = fileServerPath;
+    data['file_directory'] = fileDirectory;
+    data['files_thumbs_path'] = filesThumbsPath;
+    data['file_thumbs_count'] = fileThumbsCount;
+    data['has_hq'] = hasHq;
+    data['filegrp_size'] = filegrpSize;
+    data['process_status'] = processStatus;
+    data['video_version'] = videoVersion;
+    data['extras'] = extras;
+    data['subscription_email'] = subscriptionEmail;
+    data['thumbs_version'] = thumbsVersion;
+    data['re_conv_status'] = reConvStatus;
+    data['conv_progress'] = convProgress;
+    data['is_premium'] = isPremium;
+    data['override_default_monetization'] = overrideDefaultMonetization;
+    data['credits_required'] = creditsRequired;
+    data['rental_hours'] = rentalHours;
+    data['premium_cid'] = premiumCid;
+    data['in_editor_pick'] = inEditorPick;
+    data['has_subs'] = hasSubs;
+    data['total_subs'] = totalSubs;
+    data['last_sub_num'] = lastSubNum;
+    data['live'] = live;
+    data['udp_live'] = udpLive;
+    data['force_hls_http_url'] = forceHlsHttpUrl;
+    data['start_published_date'] = startPublishedDate;
+    data['end_published_date'] = endPublishedDate;
+    data['has_sprite'] = hasSprite;
+    data['version'] = version;
+    data['has_resulotion'] = hasResulotion;
+    data['aws_service_id'] = awsServiceId;
+    data['aws_cdn'] = awsCdn;
+    data['aws_thumb_path'] = awsThumbPath;
+    data['license_by'] = licenseBy;
+    data['is_channeHome'] = isChanneHome;
+    data['content_type'] = contentType;
+    data['super_feature'] = superFeature;
+    data['is_avod'] = isAvod;
+    data['is_tvod'] = isTvod;
+    data['pre_order'] = preOrder;
+    data['live_status'] = liveStatus;
+    data['deleted_at'] = deletedAt;
+    data['is_360'] = is360;
+    data['projection_type'] = projectionType;
+    data['epg_channel_id'] = epgChannelId;
+    data['drm_protected'] = drmProtected;
+    data['epg_url'] = epgUrl;
+    data['content_language'] = contentLanguage;
+    data['dvr_url'] = dvrUrl;
+    data['dvr_backup_timezone'] = dvrBackupTimezone;
+    data['dvr_backup_duration'] = dvrBackupDuration;
+    data['epg_dvr_catchup_url'] = epgDvrCatchupUrl;
+    data['is_favourite'] = isFavourite;
+    data['logo'] = logo;
+    if (thumbs != null) {
+      data['thumbs'] = thumbs!.toJson();
     }
-    data['gif'] = this.gif;
-    data['files'] = this.files;
-    data['watch_url'] = this.watchUrl;
-    data['year'] = this.year;
-    data['duration_in_seconds'] = this.durationInSeconds;
-    data['rate'] = this.rate;
-    data['trailers'] = this.trailers;
-    data['fav_id'] = this.favId;
-    data['is_fav'] = this.isFav;
-    data['url'] = this.url;
-    data['shareable'] = this.shareable;
-    if (this.categories != null) {
-      data['categories'] = this.categories!.map((v) => v.toJson()).toList();
+    data['gif'] = gif;
+    data['files'] = files;
+    data['watch_url'] = watchUrl;
+    data['year'] = year;
+    data['duration_in_seconds'] = durationInSeconds;
+    data['rate'] = rate;
+    data['trailers'] = trailers;
+    data['fav_id'] = favId;
+    data['is_fav'] = isFav;
+    data['url'] = url;
+    data['shareable'] = shareable;
+    if (categories != null) {
+      data['categories'] = categories!.map((v) => v.toJson()).toList();
     }
-    data['logged_in_user'] = this.loggedInUser;
-    if (this.quality != null) {
-      data['quality'] = this.quality!.toJson();
+    data['logged_in_user'] = loggedInUser;
+    if (quality != null) {
+      data['quality'] = quality!.toJson();
     }
-    data['interval'] = this.interval;
-    data['price_tag'] = this.priceTag;
-    data['show_premium_badge'] = this.showPremiumBadge;
-    data['can_pre_order'] = this.canPreOrder;
-    data['availability_date'] = this.availabilityDate;
-    data['content_type_label'] = this.contentTypeLabel;
+    data['interval'] = interval;
+    data['price_tag'] = priceTag;
+    data['show_premium_badge'] = showPremiumBadge;
+    data['can_pre_order'] = canPreOrder;
+    data['availability_date'] = availabilityDate;
+    data['content_type_label'] = contentTypeLabel;
     return data;
   }
 }
@@ -686,15 +684,15 @@ class Thumbs {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['original'] = this.original;
-    data['168x105'] = this.s168x105;
-    data['416x260'] = this.s416x260;
-    data['632x395'] = this.s632x395;
-    data['768x432'] = this.s768x432;
-    data['1280x720'] = this.s1280x720;
-    data['1920x1080'] = this.s1920x1080;
-    data['200x288'] = this.s200x288;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['original'] = original;
+    data['168x105'] = s168x105;
+    data['416x260'] = s416x260;
+    data['632x395'] = s632x395;
+    data['768x432'] = s768x432;
+    data['1280x720'] = s1280x720;
+    data['1920x1080'] = s1920x1080;
+    data['200x288'] = s200x288;
     return data;
   }
 }
@@ -758,24 +756,24 @@ class Categories {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['category_id'] = this.categoryId;
-    data['parent_id'] = this.parentId;
-    data['category_name'] = this.categoryName;
-    data['category_order'] = this.categoryOrder;
-    data['category_desc'] = this.categoryDesc;
-    data['date_added'] = this.dateAdded;
-    data['category_thumb'] = this.categoryThumb;
-    data['featured'] = this.featured;
-    data['isdefault'] = this.isdefault;
-    data['navbar'] = this.navbar;
-    data['is_trailer'] = this.isTrailer;
-    data['meta_title'] = this.metaTitle;
-    data['meta_description'] = this.metaDescription;
-    data['meta_keywords'] = this.metaKeywords;
-    data['is_video'] = this.isVideo;
-    data['is_series'] = this.isSeries;
-    data['is_live'] = this.isLive;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['category_id'] = categoryId;
+    data['parent_id'] = parentId;
+    data['category_name'] = categoryName;
+    data['category_order'] = categoryOrder;
+    data['category_desc'] = categoryDesc;
+    data['date_added'] = dateAdded;
+    data['category_thumb'] = categoryThumb;
+    data['featured'] = featured;
+    data['isdefault'] = isdefault;
+    data['navbar'] = navbar;
+    data['is_trailer'] = isTrailer;
+    data['meta_title'] = metaTitle;
+    data['meta_description'] = metaDescription;
+    data['meta_keywords'] = metaKeywords;
+    data['is_video'] = isVideo;
+    data['is_series'] = isSeries;
+    data['is_live'] = isLive;
     return data;
   }
 }
@@ -792,9 +790,9 @@ class Quality {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['hd'] = this.hd;
-    data['uhd'] = this.uhd;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['hd'] = hd;
+    data['uhd'] = uhd;
     return data;
   }
 }

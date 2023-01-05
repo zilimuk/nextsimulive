@@ -10,7 +10,7 @@ void main() async {
 
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
-    // home: LoginPage(),
+    //home: HomePage(),
     initialRoute: RouteHelper.getInitial(),
     // initialRoute: RouteHelper.getSplashPage(),
     getPages: RouteHelper.routes,

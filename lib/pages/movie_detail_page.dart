@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:simulive/json/video_detail_json.dart';
-import 'package:simulive/movies/movie_controller.dart';
+import 'package:simulive/movies/model/movie.dart';
 import 'package:video_player/video_player.dart';
 
-class VideoDetailPage extends StatefulWidget {
+class MovieDetailPage extends StatefulWidget {
   final String videoUrl;
-  final List<MovieContoller>? movieContollers;
-  const VideoDetailPage(
-      {super.key, required this.videoUrl, this.movieContollers});
+  final Data movieData;
+
+  const MovieDetailPage(
+      {super.key, required this.videoUrl, required this.movieData});
 
   @override
-  State<VideoDetailPage> createState() => _VideoDetailPageState();
+  State<MovieDetailPage> createState() => _MovieDetailPage();
 }
 
-class _VideoDetailPageState extends State<VideoDetailPage> {
+class _MovieDetailPage extends State<MovieDetailPage> {
   late VideoPlayerController _controller;
+  late Data _movieData;
+
+  Data get movieData => _movieData;
   int activeMenu = 0;
+
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
     _controller = VideoPlayerController.network(widget.videoUrl)
@@ -26,6 +32,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
           _controller.play();
         });
       });
+    _movieData = widget.movieData;
   }
 
   @override
@@ -78,12 +85,13 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
 
   Widget getBody() {
     var size = MediaQuery.of(context).size;
+    // print(_movieData.title);
     return Container(
       width: size.width,
       height: size.height,
       child: Column(children: [
         Container(
-          height: size.height * 0.2,
+          height: size.height * 0.3,
           child: Stack(
             children: [
               AspectRatio(
@@ -157,7 +165,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
           height: 10,
         ),
         Container(
-          height: size.height - 340,
+          height: size.height * .5,
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
@@ -165,7 +173,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Age of Sumuria: Battle for Japan",
+                    movieData.title.toString(),
                     style: TextStyle(
                         height: 1.4,
                         fontSize: 28,
@@ -177,9 +185,9 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                   ),
                   Row(
                     children: [
-                      const Text(
-                        "New",
-                        style: TextStyle(
+                      Text(
+                        movieData.contentTypeLabel.toString(),
+                        style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                             color: Colors.green),
@@ -188,7 +196,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                         width: 15,
                       ),
                       Text(
-                        "2021",
+                        movieData.year.toString(),
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -202,12 +210,14 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                           borderRadius: BorderRadius.circular(2),
                           color: Colors.white.withOpacity(0.2),
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.only(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
                               left: 6, right: 6, top: 4, bottom: 4),
                           child: Text(
-                            "18+",
-                            style: TextStyle(
+                            movieData.maturityLevel == "all"
+                                ? movieData.maturityLevel.toString()
+                                : "${movieData.maturityLevel}+",
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500),
                           ),
@@ -217,7 +227,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                         width: 15,
                       ),
                       Text(
-                        "1 Season",
+                        movieData.categories![0].categoryName.toString(),
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -234,12 +244,14 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                             width: 2,
                           ),
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.only(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
                               left: 6, right: 6, top: 4, bottom: 4),
                           child: Text(
-                            "HD",
-                            style: TextStyle(
+                            movieData.quality!.hd.toString() == "yes"
+                                ? 'HD'
+                                : 'UHD',
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500),
                           ),
@@ -251,7 +263,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                     height: 10,
                   ),
                   Text(
-                    "Watch Season 1 now",
+                    "Contunue watching " + movieData.title.toString(),
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontWeight: FontWeight.bold,
@@ -319,7 +331,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                     height: 10,
                   ),
                   Text(
-                    "S1:E1 The Rise of Nobunaga",
+                    movieData.title.toString(),
                     style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
@@ -354,8 +366,8 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                           ],
                         ),
                       ),
-                      const Text(
-                        "35 remaining",
+                      Text(
+                        "${movieData.interval} remaining",
                         style: TextStyle(fontSize: 10, color: Colors.grey),
                       )
                     ],
@@ -364,7 +376,9 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                     height: 8,
                   ),
                   Text(
-                    "cvsd bsa nbs bsn fvvsbvsvvsv s vsb vfhsbv sshvhsvjsvgsvf",
+                    movieData.description.toString() != ""
+                        ? movieData.categories![0].categoryDesc.toString()
+                        : movieData.categories![0].categoryDesc.toString(),
                     style: TextStyle(
                         color: Colors.white.withOpacity(0.9), height: 1.4),
                   ),
@@ -372,7 +386,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                     height: 8,
                   ),
                   Text(
-                    "Cast:  ndndsjdns fnsjnfsjnf fsjns",
+                    movieData.description.toString(),
                     style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey.withOpacity(0.9),
@@ -455,76 +469,138 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                   const SizedBox(
                     height: 30,
                   ),
-                  Text(
-                    "Season 1",
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.white.withOpacity(0.5),
-                        fontWeight: FontWeight.w500),
-                  ),
+                  movieData.seriesId != 0
+                      ? Text(
+                          "Season 1",
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.white.withOpacity(0.5),
+                              fontWeight: FontWeight.w500),
+                        )
+                      : Text(''),
                   const SizedBox(
                     height: 15,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: List.generate(movieList.length, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: (size.width - 30) * 0.85,
-                                      height: 100,
-                                      child: Row(
+                  movieData.seriesId != 0
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children:
+                                  List.generate(movieList.length, (index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: Column(
+                                    children: [
+                                      Row(
                                         children: [
                                           Container(
-                                            width: 150,
-                                            child: Stack(
+                                            width: (size.width - 30) * 0.85,
+                                            height: 100,
+                                            child: Row(
                                               children: [
                                                 Container(
                                                   width: 150,
-                                                  height: 90,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      image: DecorationImage(
-                                                          image: AssetImage(
-                                                              movieList[index]
-                                                                  ['img']),
-                                                          fit: BoxFit.cover)),
-                                                ),
-                                                Container(
-                                                  width: 150,
-                                                  height: 90,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black
-                                                        .withOpacity(0.3),
+                                                  child: Stack(
+                                                    children: [
+                                                      Container(
+                                                        width: 150,
+                                                        height: 90,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5),
+                                                            image: DecorationImage(
+                                                                image: AssetImage(
+                                                                    movieList[
+                                                                            index]
+                                                                        [
+                                                                        'img']),
+                                                                fit: BoxFit
+                                                                    .cover)),
+                                                      ),
+                                                      Container(
+                                                        width: 150,
+                                                        height: 90,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.black
+                                                              .withOpacity(0.3),
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                        top: 30,
+                                                        left: 57,
+                                                        child: Container(
+                                                          width: 38,
+                                                          height: 38,
+                                                          decoration: BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.4),
+                                                              border: Border.all(
+                                                                  width: 2,
+                                                                  color: Colors
+                                                                      .white)),
+                                                          child: const Center(
+                                                            child: Icon(
+                                                              Icons.play_arrow,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
                                                   ),
                                                 ),
-                                                Positioned(
-                                                  top: 30,
-                                                  left: 57,
-                                                  child: Container(
-                                                    width: 38,
-                                                    height: 38,
-                                                    decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Colors.black
-                                                            .withOpacity(0.4),
-                                                        border: Border.all(
-                                                            width: 2,
-                                                            color:
-                                                                Colors.white)),
-                                                    child: const Center(
-                                                      child: Icon(
-                                                        Icons.play_arrow,
-                                                        color: Colors.white,
-                                                      ),
+                                                Container(
+                                                  width: (size.width) * 0.35,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          movieList[index]
+                                                              ['title'],
+                                                          style: TextStyle(
+                                                              fontSize: 15,
+                                                              height: 1.3,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Colors
+                                                                  .white
+                                                                  .withOpacity(
+                                                                      0.9)),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 3,
+                                                        ),
+                                                        Text(
+                                                          movieList[index]
+                                                              ['duration'],
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              height: 1.3,
+                                                              color: Colors
+                                                                  .white
+                                                                  .withOpacity(
+                                                                      0.5)),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 )
@@ -532,74 +608,38 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                                             ),
                                           ),
                                           Container(
-                                            width: (size.width) * 0.35,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    movieList[index]['title'],
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        height: 1.3,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white
-                                                            .withOpacity(0.9)),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 3,
-                                                  ),
-                                                  Text(
-                                                    movieList[index]
-                                                        ['duration'],
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        height: 1.3,
-                                                        color: Colors.white
-                                                            .withOpacity(0.5)),
-                                                  ),
-                                                ],
+                                            width: (size.width - 30) * 0.15,
+                                            height: 100,
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.file_download,
+                                                color: Colors.white
+                                                    .withOpacity(0.7),
                                               ),
                                             ),
                                           )
                                         ],
                                       ),
-                                    ),
-                                    Container(
-                                      width: (size.width - 30) * 0.15,
-                                      height: 100,
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.file_download,
-                                          color: Colors.white.withOpacity(0.7),
-                                        ),
+                                      const SizedBox(
+                                        height: 5,
                                       ),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  movieList[index]['description'],
-                                  style: TextStyle(
-                                    height: 1.4,
-                                    color: Colors.white.withOpacity(0.5),
+                                      Text(
+                                        movieList[index]['description'],
+                                        style: TextStyle(
+                                          height: 1.4,
+                                          color: Colors.white.withOpacity(0.5),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                )
-                              ],
-                            ),
-                          );
-                        }),
-                      )
-                    ],
-                  ),
+                                );
+                              }),
+                            )
+                          ],
+                        )
+                      : SizedBox(
+                          height: 0,
+                        ),
                   const SizedBox(
                     height: 50,
                   ),

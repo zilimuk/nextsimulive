@@ -1,37 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:simulive/movies/model/movie.dart';
-import 'package:simulive/movies/model/trending_movie.dart';
-import 'package:simulive/movies/model/video_streaming.dart';
+import 'package:get/get.dart';
+import 'package:simulive/Auth/auth_controller.dart';
 import 'package:simulive/movies/movie_controller.dart';
-import 'package:simulive/movies/trending_controller.dart';
-import 'package:simulive/pages/video_detail_page.dart';
-import 'package:simulive/series/model/series.dart';
+import 'package:simulive/pages/movie_detail_page.dart';
 import 'package:simulive/series/series_controller.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  late Future<SeriesList> listSeries;
-  late Future<Movie> movies;
-  late Future<Movie> myVideoList;
-  late Future<TrendingVideo> trendingVideos;
-  late Future<VideoStreaming> streamingUrl;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    listSeries = fetchSeries();
-    movies = fetchMovie();
-    // streamingUrl = fetchVideoLink(videokey)
-    // myVideoList = fetchMyList();
-    trendingVideos = fetchTrendingVideo();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +18,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget getBody() {
-    var size = MediaQuery.of(context).size;
+    var size = Get.mediaQuery.size;
+    bool _isLoggeIn = Get.find<AuthController>().userLoggedin();
+    if (_isLoggeIn) {
+      // Get.Find<AuthController>().userinfo();
+      Get.find<MovieContoller>().fetchMovies(0, 1, 25, 1);
+    } else {
+      // Get.toNamed(RouteHelper.getSignInPage());
+      Get.find<MovieContoller>().fetchMovies(0, 1, 25, 1);
+    }
+    Get.find<SeriesController>().getSeriesList(0, 1, 25, 1);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: SingleChildScrollView(
@@ -54,20 +38,21 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FutureBuilder(
-                      future: listSeries,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final SeriesList series = snapshot.data!;
-                          return Stack(
+                  GetBuilder<SeriesController>(builder: (seriesController) {
+                    return seriesController.seriesList != null
+                        ? Stack(
                             children: [
                               Container(
                                 height: 500,
                                 decoration: BoxDecoration(
                                   color: Colors.green,
                                   image: DecorationImage(
-                                    image: NetworkImage(series.series!.data![2]
-                                        .portraitThumbs!.original
+                                    image: NetworkImage(seriesController
+                                        .seriesList!
+                                        .series!
+                                        .data![2]
+                                        .thumbs!
+                                        .original
                                         .toString()),
                                     fit: BoxFit.cover,
                                   ),
@@ -100,7 +85,8 @@ class _HomePageState extends State<HomePage> {
                                     //   height: 15,
                                     // ),
                                     Text(
-                                      series.series!.data![2].seriesName
+                                      seriesController.seriesList!.series!
+                                          .data![2].seriesName
                                           .toString(),
                                       style: const TextStyle(
                                           fontSize: 11, color: Colors.white),
@@ -109,12 +95,13 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               )
                             ],
+                          )
+                        : Container(
+                            child: const Center(
+                              child: Text('No data found'),
+                            ),
                           );
-                        }
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }),
+                  }),
                   const SizedBox(
                     height: 15,
                   ),
@@ -141,13 +128,13 @@ class _HomePageState extends State<HomePage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const VideoDetailPage(
-                                        videoUrl:
-                                            "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8",
-                                      )));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (_) => const VideoDetailPage(
+                          //               videoUrl:
+                          //                   "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8",
+                          //             )));
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -216,81 +203,61 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      FutureBuilder(
-                          future: movies,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<Movie> snapshot) {
-                            if (snapshot.hasData) {
-                              final Movie? listMovies = snapshot.data;
-                              return SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: Row(
-                                    children: List.generate(
-                                        listMovies!.videos!.data!.length,
-                                        (index) {
-                                      return FutureBuilder(
-                                        future: streamingUrl = fetchVideoLink(
-                                            listMovies
-                                                .videos!.data![index].videoid
-                                                .toString()),
-                                        builder: ((context, snapshot) {
-                                          if (snapshot.hasData) {
-                                            final VideoStreaming?
-                                                listVideoLinks = snapshot.data;
-                                            return GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (_) =>
-                                                            const VideoDetailPage(
-                                                              videoUrl:
-                                                                  "https://bstream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8",
-                                                            )));
-                                              },
-                                              child: Container(
-                                                margin: const EdgeInsets.only(
-                                                    right: 8),
-                                                width: 110,
-                                                height: 160,
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        listMovies
-                                                            .videos!
-                                                            .data![index]
-                                                            .thumbs!
-                                                            .s1920x1080
-                                                            .toString()),
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: GetBuilder<MovieContoller>(
+                            builder: (movieController) {
+                          return _isLoggeIn && movieController.movies != null
+                              ? Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Row(
+                                      children: List.generate(
+                                          movieController.movies!.videos!.data!
+                                              .length, (index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Get.to(() => MovieDetailPage(
+                                                videoUrl:
+                                                    "https://stream2.simulive.co.tz/streamable_videos/2022/09/12/1662999813794agig3g1r8sh2/1662999813794agig3g1r8sh2.m3u8",
+                                                movieData: movieController
+                                                    .movies!
+                                                    .videos!
+                                                    .data![index]));
+                                            //videoUrl:
+                                            // "https://bstream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8",
+                                          },
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(right: 8),
+                                            width: 110,
+                                            height: 160,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                    movieController
+                                                        .movies!
+                                                        .videos!
+                                                        .data![index]
+                                                        .thumbs!
+                                                        .original
+                                                        .toString()),
+                                                fit: BoxFit.cover,
                                               ),
-                                            );
-                                          }
-                                          return const Center(
-                                            child: Text(
-                                              "No video found",
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
                                             ),
-                                          );
-                                        }),
-                                      );
-                                    }),
+                                          ),
+                                        );
+                                      }),
+                                    ),
                                   ),
-                                ),
-                              );
-                            }
-                            // return SizedBox();
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }),
+                                )
+                              : Container(
+                                  child: Center(child: Text("No data")),
+                                );
+                        }),
+                      ),
                       const SizedBox(
                         height: 30,
                       ),
@@ -307,59 +274,60 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      FutureBuilder(
-                          future: movies,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              final Movie? popularList = snapshot!.data;
-
-                              return SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: Row(
-                                    children: List.generate(
-                                        popularList!.videos!.data!.length,
-                                        (index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      const VideoDetailPage(
-                                                          videoUrl:
-                                                              "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
-                                        },
-                                        child: Container(
-                                          margin:
-                                              const EdgeInsets.only(right: 8),
-                                          width: 110,
-                                          height: 160,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(popularList
-                                                  .videos!
-                                                  .data![index]
-                                                  .thumbs!
-                                                  .original
-                                                  .toString()),
-                                              fit: BoxFit.cover,
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: GetBuilder<MovieContoller>(
+                            builder: (popularController) {
+                          return popularController.movies != null
+                              ? Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Row(
+                                      children: List.generate(
+                                          popularController.movies!.videos!
+                                              .data!.length, (index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            // Navigator.push(
+                                            //     context,
+                                            //     MaterialPageRoute(
+                                            //         builder: (_) => const VideoDetailPage(
+                                            //             videoUrl:
+                                            //                 "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
+                                          },
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(right: 8),
+                                            width: 110,
+                                            height: 160,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                    popularController
+                                                        .movies!
+                                                        .videos!
+                                                        .data![index]
+                                                        .thumbs!
+                                                        .original
+                                                        .toString()),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
                                           ),
-                                        ),
-                                      );
-                                    }),
+                                        );
+                                      }),
+                                    ),
                                   ),
-                                ),
-                              );
-                            }
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }),
+                                )
+                              : Container(
+                                  child: Center(
+                                    child: Text('No data found'),
+                                  ),
+                                );
+                        }),
+                      ),
                       const SizedBox(
                         height: 30,
                       ),
@@ -376,28 +344,25 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      FutureBuilder(
-                          future: trendingVideos,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              final TrendingVideo? trending = snapshot.data;
-                              return SingleChildScrollView(
+                      GetBuilder<MovieContoller>(builder: (movieController) {
+                        return movieController.movies != null
+                            ? SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Row(
                                     children: List.generate(
-                                        trending!.videos!.trending!.data!
+                                        movieController.movies!.videos!.data!
                                             .length, (index) {
                                       return GestureDetector(
                                         onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      const VideoDetailPage(
-                                                          videoUrl:
-                                                              "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (_) =>
+                                          //             const VideoDetailPage(
+                                          //                 videoUrl:
+                                          //                     "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
                                         },
                                         child: Container(
                                           margin:
@@ -406,13 +371,14 @@ class _HomePageState extends State<HomePage> {
                                           height: 160,
                                           decoration: BoxDecoration(
                                             image: DecorationImage(
-                                              image: NetworkImage(trending
-                                                  .videos!
-                                                  .trending!
-                                                  .data![index]
-                                                  .thumbs!
-                                                  .original
-                                                  .toString()),
+                                              image: NetworkImage(
+                                                  movieController
+                                                      .movies!
+                                                      .videos!
+                                                      .data![index]
+                                                      .thumbs!
+                                                      .original
+                                                      .toString()),
                                               fit: BoxFit.cover,
                                             ),
                                             borderRadius:
@@ -423,12 +389,13 @@ class _HomePageState extends State<HomePage> {
                                     }),
                                   ),
                                 ),
+                              )
+                            : Container(
+                                child: Center(
+                                  child: Text('No data found'),
+                                ),
                               );
-                            }
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }),
+                      }),
                       const SizedBox(
                         height: 30,
                       ),
@@ -445,58 +412,60 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      FutureBuilder(
-                          future: listSeries,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              final SeriesList? listSeries = snapshot.data;
-                              return SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: Row(
-                                    children: List.generate(
-                                        listSeries!.series!.data!.length,
-                                        (index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      const VideoDetailPage(
-                                                          videoUrl:
-                                                              "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
-                                        },
-                                        child: Container(
-                                          margin:
-                                              const EdgeInsets.only(right: 8),
-                                          width: 165,
-                                          height: 300,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(listSeries!
-                                                  .series!
-                                                  .data![index]
-                                                  .portraitThumbs!
-                                                  .original
-                                                  .toString()),
-                                              fit: BoxFit.cover,
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: GetBuilder<SeriesController>(
+                            builder: (seriesController) {
+                          return seriesController.seriesList != null
+                              ? Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Row(
+                                      children: List.generate(
+                                          seriesController.seriesList!.series!
+                                              .data!.length, (index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            // Navigator.push(
+                                            //     context,
+                                            //     MaterialPageRoute(
+                                            //         builder: (_) => const VideoDetailPage(
+                                            //             videoUrl:
+                                            //                 "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
+                                          },
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(right: 8),
+                                            width: 165,
+                                            height: 300,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                    seriesController
+                                                        .seriesList!
+                                                        .series!
+                                                        .data![index]
+                                                        .thumbs!
+                                                        .original
+                                                        .toString()),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
                                           ),
-                                        ),
-                                      );
-                                    }),
+                                        );
+                                      }),
+                                    ),
                                   ),
-                                ),
-                              );
-                            }
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }),
+                                )
+                              : Container(
+                                  child: Center(
+                                    child: Text('No data found'),
+                                  ),
+                                );
+                        }),
+                      ),
                       const SizedBox(
                         height: 30,
                       ),
@@ -513,58 +482,60 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      FutureBuilder(
-                          future: movies,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              final Movie? movieList = snapshot.data;
-                              return SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: Row(
-                                    children: List.generate(
-                                        movieList!.videos!.data!.length,
-                                        (index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      const VideoDetailPage(
-                                                          videoUrl:
-                                                              "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
-                                        },
-                                        child: Container(
-                                          margin:
-                                              const EdgeInsets.only(right: 8),
-                                          width: 110,
-                                          height: 160,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(movieList!
-                                                  .videos!
-                                                  .data![index]
-                                                  .thumbs!
-                                                  .original
-                                                  .toString()),
-                                              fit: BoxFit.cover,
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: GetBuilder<MovieContoller>(
+                            builder: (movieController) {
+                          return movieController.movies != null
+                              ? Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Row(
+                                      children: List.generate(
+                                          movieController.movies!.videos!.data!
+                                              .length, (index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            // Navigator.push(
+                                            //     context,
+                                            //     MaterialPageRoute(
+                                            //         builder: (_) => const VideoDetailPage(
+                                            //             videoUrl:
+                                            //                 "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
+                                          },
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(right: 8),
+                                            width: 110,
+                                            height: 160,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                    movieController
+                                                        .movies!
+                                                        .videos!
+                                                        .data![index]
+                                                        .thumbs!
+                                                        .original
+                                                        .toString()),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
                                           ),
-                                        ),
-                                      );
-                                    }),
+                                        );
+                                      }),
+                                    ),
                                   ),
-                                ),
-                              );
-                            }
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }),
+                                )
+                              : Container(
+                                  child: Center(
+                                    child: Text('No data found'),
+                                  ),
+                                );
+                        }),
+                      ),
                     ],
                   )
                 ],

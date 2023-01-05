@@ -6,8 +6,12 @@ class AppConstants {
 
   static const String BASE_URL = "https://simulive.co.tz";
   static const String LOGIN_URL = "/api/users/signin";
+  static const String MOVIES = "/api/videos/list/?";
+  static const String SERIES = "/api/series/list/?";
 
-  static const String TOKEN = "DBtoken";
+  // int categories, int paginate, int limit, int page
+
+  static const String TOKEN = "";
   static const String USERNAME = "";
   static const String PASSWORD = "";
 }

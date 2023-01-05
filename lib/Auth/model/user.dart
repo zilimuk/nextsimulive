@@ -1,18 +1,12 @@
 class UserModel {
   String? status;
-  String? messages;
+  String? message;
   User? user;
-  late bool _isSuccess;
-  late String _message;
-
-  UserModel(this.status, this.messages, this._isSuccess, this._message);
-
-  String get message => _message;
-  bool get isSuccess => _isSuccess;
+  UserModel(this.status, this.message);
 
   UserModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    messages = json['message'];
+    message = json['message'];
     user = (json['user'] != null ? User.fromJson(json['user']) : null)!;
   }
 

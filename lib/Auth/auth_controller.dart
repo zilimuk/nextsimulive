@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:simulive/Auth/model/user.dart';
 import 'package:simulive/Auth/repository/auth_repository.dart';
+import 'package:simulive/helper/response_model.dart';
 
 class AuthController extends GetxController implements GetxService {
   final AuthRepository authRepository;
@@ -11,28 +12,33 @@ class AuthController extends GetxController implements GetxService {
   // ignore: prefer_final_fields
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  Future<UserModel> login(String username, String password) async {
+
+  UserModel get userModel => _userModel;
+
+  late UserModel _userModel;
+  Future<ResponseModel> login(String username, String password) async {
     _isLoading = true;
+
     update();
     Response response = await authRepository.login(username, password);
 
-    late UserModel userModel;
+    final ResponseModel responseModel;
     if (response.statusCode == 200) {
-      final user = UserModel.fromJson(jsonDecode(response.body));
-      print(user.toString());
-      // authRepository.saveUserToken(userToken);
-      // userModel = UserModel(response.body['status'], response.body['message'],
-      //     true, response.body['token']);
-      // String userToken = userModel.user!.token.toString();
-      authRepository.saveUserToken(user.user!.token.toString());
+      _userModel = UserModel.fromJson(response.body);
+      authRepository.saveUserToken(_userModel.user!.token.toString());
+
+      responseModel = ResponseModel(true, "Loggein successfully");
     } else {
-      userModel = UserModel(response.body['status'], response.body['message'],
-          false, response.statusText!);
+      responseModel = ResponseModel(false, response.statusText!);
     }
     _isLoading = false;
     update();
-    return userModel;
+    return responseModel;
     // return userModel;
+  }
+
+  bool userLoggedin() {
+    return authRepository.userLoggedin();
   }
 
   Future<void> saveUsernameAndPassword(String username, String password) async {

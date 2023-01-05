@@ -24,11 +24,11 @@ class LoginPage extends StatelessWidget {
     } else if (password.length < 6) {
       showCustomSnackBar("Password must not be less than six charachers",
           title: "Password");
-      Get.toNamed(RouteHelper.homePage);
+      // Get.toNamed(RouteHelper.homePage);
     } else {
       authController.login(username, password).then((status) {
         if (status.isSuccess) {
-          print("Success Login");
+          Get.toNamed(RouteHelper.homePage);
         } else {
           showCustomSnackBar(status.message);
         }

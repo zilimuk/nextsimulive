@@ -25,6 +25,10 @@ class AuthRepository extends GetxService {
     return await sharedPreferences.setString(AppConstants.TOKEN, token);
   }
 
+  bool userLoggedin() {
+    return sharedPreferences.containsKey(AppConstants.TOKEN);
+  }
+
   Future<void> saveUsernameAndPassword(String username, String password) async {
     try {
       await sharedPreferences.setString(AppConstants.USERNAME, username);

@@ -10,6 +10,7 @@ class HttpRequest {
   static String videoLinkUri = "/api/v2/videos/";
   static String videoLinkUri_2 = "/playable";
   static String loginUri = "/api/users/signin";
+  // https://simulive.co.tz/api/v2/videos/938/playable
 
   static loginUrl() {
     return baseUrl + loginUri;
