@@ -18,7 +18,7 @@ class PaginationQuery {
       validateCategories = 'categories=' + categories.toString();
     }
     // ignore: prefer_interpolation_to_compose_strings
-    String pagination = validateCategories! +
+    String pagination = validateCategories +
         "&" +
         "paginate=" +
         paginate.toString() +

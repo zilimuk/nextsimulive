@@ -27,11 +27,12 @@ class _RootAppState extends State<RootApp> {
   Widget getBody() {
     return IndexedStack(
       index: activeTab,
+      // ignore: prefer_const_literals_to_create_immutables
       children: [
-        HomePage(),
-        ComingSoonPage(),
-        SearchPage(),
-        DownloadPag(),
+        const HomePage(),
+        const ComingSoonPage(),
+        const SearchPage(),
+        const DownloadPag(),
       ],
     );
   }

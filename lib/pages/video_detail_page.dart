@@ -18,6 +18,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
   int activeMenu = 0;
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
     _controller = VideoPlayerController.network(widget.videoUrl)
@@ -30,6 +31,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
 
   @override
   void dispose() {
+    // ignore: todo
     // TODO: implement dispose
     super.dispose();
     _controller.dispose();
@@ -78,11 +80,11 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
 
   Widget getBody() {
     var size = MediaQuery.of(context).size;
-    return Container(
+    return SizedBox(
       width: size.width,
       height: size.height,
       child: Column(children: [
-        Container(
+        SizedBox(
           height: size.height * 0.2,
           child: Stack(
             children: [
@@ -156,7 +158,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
         const SizedBox(
           height: 10,
         ),
-        Container(
+        SizedBox(
           height: size.height - 340,
           child: SingleChildScrollView(
             child: Padding(
@@ -331,7 +333,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
+                      SizedBox(
                         width: (size.width - 30) * 0.75,
                         child: Stack(
                           children: [
@@ -476,12 +478,12 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                               children: [
                                 Row(
                                   children: [
-                                    Container(
+                                    SizedBox(
                                       width: (size.width - 30) * 0.85,
                                       height: 100,
                                       child: Row(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             width: 150,
                                             child: Stack(
                                               children: [
@@ -531,7 +533,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                                               ],
                                             ),
                                           ),
-                                          Container(
+                                          SizedBox(
                                             width: (size.width) * 0.35,
                                             child: Padding(
                                               padding: const EdgeInsets.only(
@@ -571,7 +573,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                                         ],
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: (size.width - 30) * 0.15,
                                       height: 100,
                                       child: Center(

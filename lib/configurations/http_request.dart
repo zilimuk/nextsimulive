@@ -19,7 +19,7 @@ class HttpRequest {
   static streamVideoUrl(String videoId, String token) {
     String url = baseUrl + videoLinkUri + videoId + videoLinkUri_2;
     Map<String, dynamic> headers = <String, dynamic>{};
-    headers['Authorization'] = '"' + token + '"';
+    headers['Authorization'] = '"$token"';
     return '$url,$headers';
   }
 

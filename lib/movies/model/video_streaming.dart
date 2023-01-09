@@ -4,7 +4,7 @@ class VideoStreaming {
   double? time;
   String? ip;
   String? message;
-  List<StreamData>? data;
+  List<Data>? data;
 
   VideoStreaming(
       {this.status,
@@ -21,9 +21,9 @@ class VideoStreaming {
     ip = json['ip'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <StreamData>[];
+      data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(StreamData.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
@@ -42,7 +42,7 @@ class VideoStreaming {
   }
 }
 
-class StreamData {
+class Data {
   List<String>? media;
   Thumbs? thumbs;
   PortraitThumbs? portraitThumbs;
@@ -53,13 +53,13 @@ class StreamData {
   List<MediaV2>? mediaV2;
   Ad? ad;
   Content? content;
-  StreamingNextEpisode? nextEpisode;
-  StreamingPreviousEpisode? previousEpisode;
+  NextEpisode? nextEpisode;
+  PreviousEpisode? previousEpisode;
   String? androidLivePlayer;
   String? androidTimeshift;
   String? androidVodPlayer;
 
-  StreamData(
+  Data(
       {this.media,
       this.thumbs,
       this.portraitThumbs,
@@ -70,19 +70,19 @@ class StreamData {
       this.mediaV2,
       this.ad,
       this.content,
-      // this.nextEpisode,
-      // this.previousEpisode,
+      this.nextEpisode,
+      this.previousEpisode,
       this.androidLivePlayer,
       this.androidTimeshift,
       this.androidVodPlayer});
 
-  StreamData.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     media = json['media'].cast<String>();
     thumbs = json['thumbs'] != null ? Thumbs.fromJson(json['thumbs']) : null;
     portraitThumbs = json['portrait_thumbs'] != null
         ? PortraitThumbs.fromJson(json['portrait_thumbs'])
         : null;
-    sprite = json['sprite'] != null ? Sprite.fromJson(json['sprite']) : null;
+    sprite = json['sprite'] != null ? Sprite.fromJson(json['spirite']) : null;
     logo = json['logo'];
     captions =
         json['captions'] != null ? Captions.fromJson(json['captions']) : null;
@@ -102,10 +102,10 @@ class StreamData {
     content =
         json['content'] != null ? Content.fromJson(json['content']) : null;
     nextEpisode = json['next_episode'] != null
-        ? StreamingNextEpisode.fromJson(json['next_episode'])
+        ? NextEpisode.fromJson(json['next_episode'])
         : null;
     previousEpisode = json['previous_episode'] != null
-        ? StreamingPreviousEpisode.fromJson(json['previous_episode'])
+        ? PreviousEpisode.fromJson(json['previous_episode'])
         : null;
     androidLivePlayer = json['android_live_player'];
     androidTimeshift = json['android_timeshift'];
@@ -122,11 +122,11 @@ class StreamData {
       data['portrait_thumbs'] = portraitThumbs!.toJson();
     }
     if (sprite != null) {
-      data['sprite'] = sprite!.toJson;
+      data['sprite'] = sprite!.toJson();
     }
     data['logo'] = logo;
     if (captions != null) {
-      data['captions'] = captions!.toJson;
+      data['captions'] = captions!.toJson();
     }
     if (lMedia != null) {
       data['_media'] = lMedia!.map((v) => v.toJson()).toList();
@@ -135,7 +135,7 @@ class StreamData {
       data['media_v2'] = mediaV2!.map((v) => v.toJson()).toList();
     }
     if (ad != null) {
-      data['ad'] = ad!.toJson;
+      data['ad'] = ad!.toJson();
     }
     if (content != null) {
       data['content'] = content!.toJson();
@@ -149,98 +149,6 @@ class StreamData {
     data['android_live_player'] = androidLivePlayer;
     data['android_timeshift'] = androidTimeshift;
     data['android_vod_player'] = androidVodPlayer;
-    return data;
-  }
-}
-
-class Captions {
-  String? key;
-  String? kind;
-  String? label;
-  String? src;
-  String? srcLang;
-  String? defaultc;
-
-  Captions(
-      this.key, this.kind, this.label, this.src, this.srcLang, this.defaultc);
-  Captions.fromJson(Map<String, dynamic> json) {
-    key = json['key'];
-    kind = json['kind'];
-    label = json['label'];
-    src = json['src'];
-    srcLang = json['srcLang'];
-    defaultc = json['default'];
-  }
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['key'] = key;
-    data['kind'] = kind;
-    data['label'] = label;
-    data['src'] = src;
-    data['srcLang'] = srcLang;
-    data['default'] = defaultc;
-    return data;
-  }
-}
-
-class Sprite {
-  String? url;
-  String? interval;
-  String? width;
-  String? height;
-
-  Sprite(this.url, this.interval, this.width, this.height);
-
-  Sprite.fromJson(Map<String, dynamic> json) {
-    url = json['url'];
-    interval = json['interval'];
-    width = json['width'];
-    height = json['height'];
-  }
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['url'] = url;
-    data['interval'] = interval;
-    data['width'] = width;
-    data['height'] = height;
-    return data;
-  }
-}
-
-class Ad {
-  String? limit;
-  String? order;
-  int? id;
-  int? videoid;
-  String? adType;
-  String? status;
-  String? nonExpiry;
-  String? countOnly;
-
-  Ad(this.limit, this.order, this.videoid, this.adType, this.status,
-      this.nonExpiry, this.countOnly);
-  Ad.fromJson(Map<String, dynamic> json) {
-    limit = json['limit'];
-    order = json['order'];
-    id = json['id'];
-    videoid = json['videoid'];
-    adType = json['ad_type'];
-    status = json['status'];
-    nonExpiry = json['non_expiry'];
-    countOnly = json['count_only'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['limit'] = limit;
-    data['order'] = order;
-    data['id'] = id;
-    data['videoid'] = videoid;
-    data['ad_type'] = adType;
-    data['status'] = status;
-    data['non_expiry'] = nonExpiry;
-    data['count_only'] = countOnly;
-
     return data;
   }
 }
@@ -486,8 +394,8 @@ class Content {
   Quality? quality;
   String? getMedia;
   int? durationInSecondsForContent;
-  StreamingSeries? series;
-  StreamingSeason? season;
+  Series? series;
+  Season? season;
   String? priceTag;
   bool? showPremiumBadge;
   String? url;
@@ -739,12 +647,8 @@ class Content {
         json['quality'] != null ? Quality.fromJson(json['quality']) : null;
     getMedia = json['get_media'];
     durationInSecondsForContent = json['duration_in_seconds_for_content'];
-    series = json['series'] != null
-        ? StreamingSeries.fromJson(json['series'])
-        : null;
-    season = json['season'] != null
-        ? StreamingSeason.fromJson(json['season'])
-        : null;
+    series = json['series'] != null ? Series.fromJson(json['series']) : null;
+    season = json['season'] != null ? Season.fromJson(json['season']) : null;
     priceTag = json['price_tag'];
     showPremiumBadge = json['show_premium_badge'];
     url = json['url'];
@@ -919,7 +823,7 @@ class Quality {
   }
 }
 
-class StreamingSeries {
+class Series {
   int? seriesId;
   String? seriesName;
   String? seriesDescription;
@@ -963,7 +867,7 @@ class StreamingSeries {
   String? contentTypeLabel;
   String? title;
 
-  StreamingSeries(
+  Series(
       {this.seriesId,
       this.seriesName,
       this.seriesDescription,
@@ -1007,7 +911,7 @@ class StreamingSeries {
       this.contentTypeLabel,
       this.title});
 
-  StreamingSeries.fromJson(Map<String, dynamic> json) {
+  Series.fromJson(Map<String, dynamic> json) {
     seriesId = json['series_id'];
     seriesName = json['series_name'];
     seriesDescription = json['series_description'];
@@ -1100,7 +1004,7 @@ class StreamingSeries {
   }
 }
 
-class StreamingSeason {
+class Season {
   int? seasonId;
   int? seriesId;
   int? sequence;
@@ -1112,7 +1016,7 @@ class StreamingSeason {
   int? status;
   int? episodeCount;
 
-  StreamingSeason(
+  Season(
       {this.seasonId,
       this.seriesId,
       this.sequence,
@@ -1124,7 +1028,7 @@ class StreamingSeason {
       this.status,
       this.episodeCount});
 
-  StreamingSeason.fromJson(Map<String, dynamic> json) {
+  Season.fromJson(Map<String, dynamic> json) {
     seasonId = json['season_id'];
     seriesId = json['series_id'];
     sequence = json['sequence'];
@@ -1153,7 +1057,7 @@ class StreamingSeason {
   }
 }
 
-class StreamingNextEpisode {
+class NextEpisode {
   int? videoid;
   String? videokey;
   String? videoPassword;
@@ -1278,17 +1182,17 @@ class StreamingNextEpisode {
   String? isFav;
   String? url;
   String? shareable;
-  List<StreamingVideoCategories>? categories;
+  List<Categories>? categories;
   Quality? quality;
   String? interval;
-  StreamingSeries? series;
+  Series? series;
   String? priceTag;
   bool? showPremiumBadge;
   bool? canPreOrder;
   String? availabilityDate;
   String? contentTypeLabel;
 
-  StreamingNextEpisode(
+  NextEpisode(
       {this.videoid,
       this.videokey,
       this.videoPassword,
@@ -1423,7 +1327,7 @@ class StreamingNextEpisode {
       this.availabilityDate,
       this.contentTypeLabel});
 
-  StreamingNextEpisode.fromJson(Map<String, dynamic> json) {
+  NextEpisode.fromJson(Map<String, dynamic> json) {
     videoid = json['videoid'];
     videokey = json['videokey'];
     videoPassword = json['video_password'];
@@ -1551,17 +1455,15 @@ class StreamingNextEpisode {
     url = json['url'];
     shareable = json['shareable'];
     if (json['categories'] != null) {
-      categories = <StreamingVideoCategories>[];
+      categories = <Categories>[];
       json['categories'].forEach((v) {
-        categories!.add(StreamingVideoCategories.fromJson(v));
+        categories!.add(Categories.fromJson(v));
       });
     }
     quality =
         json['quality'] != null ? Quality.fromJson(json['quality']) : null;
     interval = json['interval'];
-    series = json['series'] != null
-        ? StreamingSeries.fromJson(json['series'])
-        : null;
+    series = json['series'] != null ? Series.fromJson(json['series']) : null;
     priceTag = json['price_tag'];
     showPremiumBadge = json['show_premium_badge'];
     canPreOrder = json['can_pre_order'];
@@ -1718,7 +1620,7 @@ class StreamingNextEpisode {
   }
 }
 
-class StreamingVideoCategories {
+class Categories {
   int? categoryId;
   int? parentId;
   String? categoryName;
@@ -1737,7 +1639,7 @@ class StreamingVideoCategories {
   int? isSeries;
   int? isLive;
 
-  StreamingVideoCategories(
+  Categories(
       {this.categoryId,
       this.parentId,
       this.categoryName,
@@ -1756,7 +1658,7 @@ class StreamingVideoCategories {
       this.isSeries,
       this.isLive});
 
-  StreamingVideoCategories.fromJson(Map<String, dynamic> json) {
+  Categories.fromJson(Map<String, dynamic> json) {
     categoryId = json['category_id'];
     parentId = json['parent_id'];
     categoryName = json['category_name'];
@@ -1799,14 +1701,14 @@ class StreamingVideoCategories {
   }
 }
 
-class StreamingPreviousEpisode {
+class PreviousEpisode {
   int? videoid;
   String? videokey;
   String? videoPassword;
   String? videoUsers;
   String? username;
   int? userid;
-  String? partnerId;
+  int? partnerId;
   String? maturityLevel;
   String? title;
   String? fileName;
@@ -1918,7 +1820,7 @@ class StreamingPreviousEpisode {
   String? contentTypeLabel;
   String? shareable;
 
-  StreamingPreviousEpisode(
+  PreviousEpisode(
       {this.videoid,
       this.videokey,
       this.videoPassword,
@@ -2037,7 +1939,7 @@ class StreamingPreviousEpisode {
       this.contentTypeLabel,
       this.shareable});
 
-  StreamingPreviousEpisode.fromJson(Map<String, dynamic> json) {
+  PreviousEpisode.fromJson(Map<String, dynamic> json) {
     videoid = json['videoid'];
     videokey = json['videokey'];
     videoPassword = json['video_password'];
@@ -2276,6 +2178,98 @@ class StreamingPreviousEpisode {
     data['availability_date'] = availabilityDate;
     data['content_type_label'] = contentTypeLabel;
     data['shareable'] = shareable;
+    return data;
+  }
+}
+
+class Captions {
+  String? key;
+  String? kind;
+  String? label;
+  String? src;
+  String? srcLang;
+  String? defaultc;
+
+  Captions(
+      this.key, this.kind, this.label, this.src, this.srcLang, this.defaultc);
+  Captions.fromJson(Map<String, dynamic> json) {
+    key = json['key'];
+    kind = json['kind'];
+    label = json['label'];
+    src = json['src'];
+    srcLang = json['srcLang'];
+    defaultc = json['default'];
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['key'] = key;
+    data['kind'] = kind;
+    data['label'] = label;
+    data['src'] = src;
+    data['srcLang'] = srcLang;
+    data['default'] = defaultc;
+    return data;
+  }
+}
+
+class Sprite {
+  String? url;
+  String? interval;
+  String? width;
+  String? height;
+
+  Sprite(this.url, this.interval, this.width, this.height);
+
+  Sprite.fromJson(Map<String, dynamic> json) {
+    url = json['url'];
+    interval = json['interval'];
+    width = json['width'];
+    height = json['height'];
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['url'] = url;
+    data['interval'] = interval;
+    data['width'] = width;
+    data['height'] = height;
+    return data;
+  }
+}
+
+class Ad {
+  String? limit;
+  String? order;
+  int? id;
+  int? videoid;
+  String? adType;
+  String? status;
+  String? nonExpiry;
+  String? countOnly;
+
+  Ad(this.limit, this.order, this.videoid, this.adType, this.status,
+      this.nonExpiry, this.countOnly);
+  Ad.fromJson(Map<String, dynamic> json) {
+    limit = json['limit'];
+    order = json['order'];
+    id = json['id'];
+    videoid = json['videoid'];
+    adType = json['ad_type'];
+    status = json['status'];
+    nonExpiry = json['non_expiry'];
+    countOnly = json['count_only'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['limit'] = limit;
+    data['order'] = order;
+    data['id'] = id;
+    data['videoid'] = videoid;
+    data['ad_type'] = adType;
+    data['status'] = status;
+    data['non_expiry'] = nonExpiry;
+    data['count_only'] = countOnly;
+
     return data;
   }
 }

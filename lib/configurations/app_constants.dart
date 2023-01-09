@@ -13,7 +13,8 @@ class AppConstants {
   // int categories, int paginate, int limit, int page
 
   static const String TOKEN = "";
-  static const List<String> RESPONSE_HEADER = [];
+  static const String PHPID = "";
+  static const String SESSSALT = "";
   static const String USERNAME = "";
   static const String PASSWORD = "";
 }

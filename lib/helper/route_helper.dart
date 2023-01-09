@@ -9,13 +9,13 @@ class RouteHelper {
 
   static const String movieDetails = "/movie-details";
 
-  static String getInitial() => '$homePage';
+  static String getInitial() => homePage;
   static String getPopularMovies(String url) => '$movieDetails?url=$url';
-  static String getSignInPage() => '$signIn';
+  static String getSignInPage() => signIn;
 
   static List<GetPage> routes = [
-    GetPage(name: initial, page: () => HomePage()),
-    GetPage(name: "/home-page", page: () => HomePage()),
+    GetPage(name: initial, page: () => const HomePage()),
+    GetPage(name: "/home-page", page: () => const HomePage()),
     GetPage(name: signIn, page: () => LoginPage(), transition: Transition.fade),
     // GetPage(
     //   name: "/movie-details",

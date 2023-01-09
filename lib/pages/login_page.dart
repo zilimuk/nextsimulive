@@ -211,7 +211,7 @@ class LoginPage extends StatelessWidget {
                   ),
                   RichText(
                     text: TextSpan(
-                        text: "Don\'t have an account?",
+                        text: "Don't have an account?",
                         style: TextStyle(
                           color: Colors.grey[500],
                           fontSize: 18,

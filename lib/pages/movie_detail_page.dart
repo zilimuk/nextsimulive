@@ -37,6 +37,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
 
   @override
   void dispose() {
+    // ignore: todo
     // TODO: implement dispose
     super.dispose();
     _controller.dispose();
@@ -86,11 +87,11 @@ class _MovieDetailPage extends State<MovieDetailPage> {
   Widget getBody() {
     var size = MediaQuery.of(context).size;
     // print(_movieData.title);
-    return Container(
+    return SizedBox(
       width: size.width,
       height: size.height,
       child: Column(children: [
-        Container(
+        SizedBox(
           height: size.height * 0.3,
           child: Stack(
             children: [
@@ -164,7 +165,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
         const SizedBox(
           height: 10,
         ),
-        Container(
+        SizedBox(
           height: size.height * .5,
           child: SingleChildScrollView(
             child: Padding(
@@ -263,7 +264,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                     height: 10,
                   ),
                   Text(
-                    "Contunue watching " + movieData.title.toString(),
+                    "Contunue watching ${movieData.title}",
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontWeight: FontWeight.bold,
@@ -343,7 +344,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
+                      SizedBox(
                         width: (size.width - 30) * 0.75,
                         child: Stack(
                           children: [
@@ -368,7 +369,8 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                       ),
                       Text(
                         "${movieData.interval} remaining",
-                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.grey),
                       )
                     ],
                   ),
@@ -477,7 +479,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                               color: Colors.white.withOpacity(0.5),
                               fontWeight: FontWeight.w500),
                         )
-                      : Text(''),
+                      : const Text(''),
                   const SizedBox(
                     height: 15,
                   ),
@@ -494,12 +496,12 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                                     children: [
                                       Row(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             width: (size.width - 30) * 0.85,
                                             height: 100,
                                             child: Row(
                                               children: [
-                                                Container(
+                                                SizedBox(
                                                   width: 150,
                                                   child: Stack(
                                                     children: [
@@ -558,7 +560,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                                                     ],
                                                   ),
                                                 ),
-                                                Container(
+                                                SizedBox(
                                                   width: (size.width) * 0.35,
                                                   child: Padding(
                                                     padding:
@@ -607,7 +609,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                                               ],
                                             ),
                                           ),
-                                          Container(
+                                          SizedBox(
                                             width: (size.width - 30) * 0.15,
                                             height: 100,
                                             child: Center(
@@ -637,7 +639,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                             )
                           ],
                         )
-                      : SizedBox(
+                      : const SizedBox(
                           height: 0,
                         ),
                   const SizedBox(

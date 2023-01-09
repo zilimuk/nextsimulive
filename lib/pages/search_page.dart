@@ -105,7 +105,7 @@ class _SearchPageState extends State<SearchPage> {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: (size.width - 36) * 0.38,
                                 child: Text(
                                   searchJson[index]['title'],
@@ -119,7 +119,7 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: (size.width - 36) * 0.2,
                         height: 80,
                         child: Center(

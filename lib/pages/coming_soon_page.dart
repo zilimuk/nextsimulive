@@ -22,13 +22,13 @@ class _ComingSoonPageState extends State<ComingSoonPage> {
     return AppBar(
       backgroundColor: Colors.black,
       elevation: 0,
-      title: Text(
+      title: const Text(
         "Coming Soon",
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
       actions: [
         IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.collections_bookmark,
             size: 28,
           ),
@@ -64,7 +64,7 @@ class _ComingSoonPageState extends State<ComingSoonPage> {
                       size: 28,
                       color: Colors.white.withOpacity(0.9),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 15,
                     ),
                     Text(
@@ -85,7 +85,7 @@ class _ComingSoonPageState extends State<ComingSoonPage> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Column(
@@ -96,6 +96,7 @@ class _ComingSoonPageState extends State<ComingSoonPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // ignore: sized_box_for_whitespace
                     Container(
                       height: 220,
                       child: Stack(

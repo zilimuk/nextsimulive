@@ -498,7 +498,7 @@ class Trailers {
   String? contentType;
   String? order;
   String? createdAt;
-  Null? updatedAt;
+  String? updatedAt;
   String? active;
   String? status;
 

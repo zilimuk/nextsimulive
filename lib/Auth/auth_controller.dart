@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:simulive/Auth/model/user.dart';
 import 'package:simulive/Auth/repository/auth_repository.dart';
@@ -25,9 +23,14 @@ class AuthController extends GetxController implements GetxService {
     final ResponseModel responseModel;
     if (response.statusCode == 200) {
       _userModel = UserModel.fromJson(response.body);
-      authRepository.saveUserToken(_userModel.user!.token.toString());
+      authRepository.saveUserToken(
+        _userModel.user!.token.toString(),
+        _userModel.user!.phpid.toString(),
+        _userModel.user!.sessSalt.toString(),
+      );
       authRepository.saveUsernameAndPassword(username, password);
-
+      authRepository.saveCookie(_userModel.user!.phpid.toString(),
+          _userModel.user!.sessSalt.toString());
       responseModel = ResponseModel(true, "Loggein successfully");
     } else {
       responseModel = ResponseModel(false, response.statusText!);
@@ -44,6 +47,14 @@ class AuthController extends GetxController implements GetxService {
 
   Future<String> getToken() {
     return authRepository.getUserToken();
+  }
+
+  Future<String?> getCookieSesssalt() {
+    return authRepository.getCookieSesssalt();
+  }
+
+  Future<String?> getCookiePhpId() {
+    return authRepository.getCookiePhpId();
   }
 
   Future<List<String?>> getUsernameAndPassword() {

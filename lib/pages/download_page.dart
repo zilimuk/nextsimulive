@@ -108,7 +108,7 @@ class _DownloadPagState extends State<DownloadPag> {
               height: 20,
             ),
             const Padding(
-              padding: const EdgeInsets.only(left: 40, right: 40),
+              padding: EdgeInsets.only(left: 40, right: 40),
               child: Text(
                 "Download shows and movies so you'll be never be without something",
                 textAlign: TextAlign.center,
@@ -137,7 +137,7 @@ class _DownloadPagState extends State<DownloadPag> {
             )
           ],
         ),
-        Spacer()
+        const Spacer()
       ],
     );
   }

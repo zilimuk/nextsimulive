@@ -1,4 +1,4 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
+// ignore_for_file: no_leading_underscores_for_local_identifiers, unused_local_variable
 
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,15 +39,16 @@ class MovieRepository extends GetxService {
   }
 
   Future<Response> getMovieUrl(String videoId) async {
-    List _usernamePassword =
-        await Get.find<AuthController>().getUsernameAndPassword();
-    String _username = _usernamePassword[0];
-    String _password = _usernamePassword[1];
-    Get.find<AuthController>().login(_username, _password);
-    var _auth = await Get.find<AuthController>().getToken();
-    String _token = _auth;
-    return await apiClient.postData("${AppConstants.VIDEO}$videoId/playable",
-        {"Authorization": "Bear $_token"});
+    var _tok = await Get.find<AuthController>().getToken();
+    String _token = _tok;
+    var _php = await Get.find<AuthController>().getCookiePhpId();
+    String _phpid = _php.toString();
+    var _sess = await Get.find<AuthController>().getCookieSesssalt();
+    String _sesssalt = _sess.toString();
+
+    apiClient.updateHeader(_token, _phpid, _sesssalt);
+    return await apiClient
+        .postData("${AppConstants.VIDEO}$videoId/playable", {});
     // return await apiClient.postData(
     //     "${AppConstants.VIDEO}$videoId/playable", authController.getToken());
   }

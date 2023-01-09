@@ -1,9 +1,4 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:http/http.dart' as http;
-import 'package:simulive/configurations/http_request.dart';
 import 'package:simulive/helper/response_model.dart';
 import 'package:simulive/series/model/series.dart';
 import 'package:simulive/series/repository/series_repository.dart';
@@ -26,6 +21,7 @@ class SeriesController extends GetxController implements GetxService {
     update();
     Response response =
         await seriesRepository.getSeriesList(categories, paginate, limit, page);
+    // ignore: unused_local_variable
     final ResponseModel responseModel;
 
     if (response.statusCode == 200) {
