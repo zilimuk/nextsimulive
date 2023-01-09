@@ -9,7 +9,7 @@ class RouteHelper {
 
   static const String movieDetails = "/movie-details";
 
-  static String getInitial() => '$initial';
+  static String getInitial() => '$homePage';
   static String getPopularMovies(String url) => '$movieDetails?url=$url';
   static String getSignInPage() => '$signIn';
 

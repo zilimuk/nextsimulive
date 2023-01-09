@@ -8,16 +8,15 @@ class SeriesList {
   SeriesList.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    series =
-        json['series'] != null ? new Series.fromJson(json['series']) : null;
+    series = json['series'] != null ? Series.fromJson(json['series']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.series != null) {
-      data['series'] = this.series!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    if (series != null) {
+      data['series'] = series!.toJson();
     }
     return data;
   }
@@ -34,14 +33,14 @@ class Series {
     if (json['data'] != null) {
       data = <SeriesData>[];
       json['data'].forEach((v) {
-        data!.add(new SeriesData.fromJson(v));
+        data!.add(SeriesData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['current_page'] = this.currentPage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['current_page'] = currentPage;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -219,23 +218,21 @@ class SeriesData {
     username = json['username'];
     logo = json['logo'];
     portraitThumbs = json['portrait_thumbs'] != null
-        ? new PortraitThumbs.fromJson(json['portrait_thumbs'])
+        ? PortraitThumbs.fromJson(json['portrait_thumbs'])
         : null;
     thumb = json['thumb'];
-    thumbs =
-        json['thumbs'] != null ? new Thumbs.fromJson(json['thumbs']) : null;
+    thumbs = json['thumbs'] != null ? Thumbs.fromJson(json['thumbs']) : null;
     if (json['categories'] != null) {
       categories = <Categories>[];
       json['categories'].forEach((v) {
-        categories!.add(new Categories.fromJson(v));
+        categories!.add(Categories.fromJson(v));
       });
     }
     shareable = json['shareable'];
-    trailers = json['trailers'] != null
-        ? new Trailers.fromJson(json['trailers'])
-        : null;
+    trailers =
+        json['trailers'] != null ? Trailers.fromJson(json['trailers']) : null;
     trailer =
-        json['trailer'] != null ? new Trailers.fromJson(json['trailer']) : null;
+        json['trailer'] != null ? Trailers.fromJson(json['trailer']) : null;
     favId = json['fav_id'];
     isFav = json['is_fav'];
     isFavourite = json['is_favourite'];
@@ -251,78 +248,78 @@ class SeriesData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['series_id'] = this.seriesId;
-    data['series_name'] = this.seriesName;
-    data['series_description'] = this.seriesDescription;
-    data['series_tags'] = this.seriesTags;
-    data['maturity_level'] = this.maturityLevel;
-    data['category'] = this.category;
-    data['userid'] = this.userid;
-    data['partner_id'] = this.partnerId;
-    data['views'] = this.views;
-    data['date_added'] = this.dateAdded;
-    data['featured'] = this.featured;
-    data['broadcast'] = this.broadcast;
-    data['allow_comments'] = this.allowComments;
-    data['allow_rating'] = this.allowRating;
-    data['total_comments'] = this.totalComments;
-    data['last_commented'] = this.lastCommented;
-    data['total_objects'] = this.totalObjects;
-    data['rating'] = this.rating;
-    data['rated_by'] = this.ratedBy;
-    data['voters'] = this.voters;
-    data['active'] = this.active;
-    data['public_upload'] = this.publicUpload;
-    data['type'] = this.type;
-    data['file_directory'] = this.fileDirectory;
-    data['start_published_date'] = this.startPublishedDate;
-    data['end_published_date'] = this.endPublishedDate;
-    data['thumbs_updated_on'] = this.thumbsUpdatedOn;
-    data['super_feature'] = this.superFeature;
-    data['realease_date'] = this.realeaseDate;
-    data['is_avod'] = this.isAvod;
-    data['is_tvod'] = this.isTvod;
-    data['is_svod'] = this.isSvod;
-    data['credits_required'] = this.creditsRequired;
-    data['rental_hours'] = this.rentalHours;
-    data['override_default_monetization'] = this.overrideDefaultMonetization;
-    data['start_released_date'] = this.startReleasedDate;
-    data['end_released_date'] = this.endReleasedDate;
-    data['deleted_at'] = this.deletedAt;
-    data['season_count'] = this.seasonCount;
-    data['content_language'] = this.contentLanguage;
-    data['username'] = this.username;
-    data['logo'] = this.logo;
-    if (this.portraitThumbs != null) {
-      data['portrait_thumbs'] = this.portraitThumbs!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['series_id'] = seriesId;
+    data['series_name'] = seriesName;
+    data['series_description'] = seriesDescription;
+    data['series_tags'] = seriesTags;
+    data['maturity_level'] = maturityLevel;
+    data['category'] = category;
+    data['userid'] = userid;
+    data['partner_id'] = partnerId;
+    data['views'] = views;
+    data['date_added'] = dateAdded;
+    data['featured'] = featured;
+    data['broadcast'] = broadcast;
+    data['allow_comments'] = allowComments;
+    data['allow_rating'] = allowRating;
+    data['total_comments'] = totalComments;
+    data['last_commented'] = lastCommented;
+    data['total_objects'] = totalObjects;
+    data['rating'] = rating;
+    data['rated_by'] = ratedBy;
+    data['voters'] = voters;
+    data['active'] = active;
+    data['public_upload'] = publicUpload;
+    data['type'] = type;
+    data['file_directory'] = fileDirectory;
+    data['start_published_date'] = startPublishedDate;
+    data['end_published_date'] = endPublishedDate;
+    data['thumbs_updated_on'] = thumbsUpdatedOn;
+    data['super_feature'] = superFeature;
+    data['realease_date'] = realeaseDate;
+    data['is_avod'] = isAvod;
+    data['is_tvod'] = isTvod;
+    data['is_svod'] = isSvod;
+    data['credits_required'] = creditsRequired;
+    data['rental_hours'] = rentalHours;
+    data['override_default_monetization'] = overrideDefaultMonetization;
+    data['start_released_date'] = startReleasedDate;
+    data['end_released_date'] = endReleasedDate;
+    data['deleted_at'] = deletedAt;
+    data['season_count'] = seasonCount;
+    data['content_language'] = contentLanguage;
+    data['username'] = username;
+    data['logo'] = logo;
+    if (portraitThumbs != null) {
+      data['portrait_thumbs'] = portraitThumbs!.toJson();
     }
-    data['thumb'] = this.thumb;
-    if (this.thumbs != null) {
-      data['thumbs'] = this.thumbs!.toJson();
+    data['thumb'] = thumb;
+    if (thumbs != null) {
+      data['thumbs'] = thumbs!.toJson();
     }
-    if (this.categories != null) {
-      data['categories'] = this.categories!.map((v) => v.toJson()).toList();
+    if (categories != null) {
+      data['categories'] = categories!.map((v) => v.toJson()).toList();
     }
-    data['shareable'] = this.shareable;
-    if (this.trailers != null) {
-      data['trailers'] = this.trailers!.toJson();
+    data['shareable'] = shareable;
+    if (trailers != null) {
+      data['trailers'] = trailers!.toJson();
     }
-    if (this.trailer != null) {
-      data['trailer'] = this.trailer!.toJson();
+    if (trailer != null) {
+      data['trailer'] = trailer!.toJson();
     }
-    data['fav_id'] = this.favId;
-    data['is_fav'] = this.isFav;
-    data['is_favourite'] = this.isFavourite;
-    data['first_episode_id'] = this.firstEpisodeId;
-    data['first_season_id'] = this.firstSeasonId;
-    data['year'] = this.year;
-    data['credits_required_orignal'] = this.creditsRequiredOrignal;
-    data['currency_symbol'] = this.currencySymbol;
-    data['content_type_label'] = this.contentTypeLabel;
-    data['content_type'] = this.contentType;
-    data['rate'] = this.rate;
-    data['logged_in_user'] = this.loggedInUser;
+    data['fav_id'] = favId;
+    data['is_fav'] = isFav;
+    data['is_favourite'] = isFavourite;
+    data['first_episode_id'] = firstEpisodeId;
+    data['first_season_id'] = firstSeasonId;
+    data['year'] = year;
+    data['credits_required_orignal'] = creditsRequiredOrignal;
+    data['currency_symbol'] = currencySymbol;
+    data['content_type_label'] = contentTypeLabel;
+    data['content_type'] = contentType;
+    data['rate'] = rate;
+    data['logged_in_user'] = loggedInUser;
     return data;
   }
 }
@@ -353,13 +350,13 @@ class PortraitThumbs {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['original'] = this.original;
-    data['160x240'] = this.s160x240;
-    data['240x360'] = this.s240x360;
-    data['320x480'] = this.s320x480;
-    data['480x720'] = this.s480x720;
-    data['720x1080'] = this.s720x1080;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['original'] = original;
+    data['160x240'] = s160x240;
+    data['240x360'] = s240x360;
+    data['320x480'] = s320x480;
+    data['480x720'] = s480x720;
+    data['720x1080'] = s720x1080;
     return data;
   }
 }
@@ -396,15 +393,15 @@ class Thumbs {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['original'] = this.original;
-    data['168x105'] = this.s168x105;
-    data['416x260'] = this.s416x260;
-    data['632x395'] = this.s632x395;
-    data['768x432'] = this.s768x432;
-    data['1280x720'] = this.s1280x720;
-    data['1920x1080'] = this.s1920x1080;
-    data['200x288'] = this.s200x288;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['original'] = original;
+    data['168x105'] = s168x105;
+    data['416x260'] = s416x260;
+    data['632x395'] = s632x395;
+    data['768x432'] = s768x432;
+    data['1280x720'] = s1280x720;
+    data['1920x1080'] = s1920x1080;
+    data['200x288'] = s200x288;
     return data;
   }
 }
@@ -471,25 +468,25 @@ class Categories {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['category_id'] = this.categoryId;
-    data['parent_id'] = this.parentId;
-    data['category_name'] = this.categoryName;
-    data['category_order'] = this.categoryOrder;
-    data['category_desc'] = this.categoryDesc;
-    data['date_added'] = this.dateAdded;
-    data['category_thumb'] = this.categoryThumb;
-    data['featured'] = this.featured;
-    data['isdefault'] = this.isdefault;
-    data['navbar'] = this.navbar;
-    data['is_trailer'] = this.isTrailer;
-    data['meta_title'] = this.metaTitle;
-    data['meta_description'] = this.metaDescription;
-    data['meta_keywords'] = this.metaKeywords;
-    data['is_video'] = this.isVideo;
-    data['is_series'] = this.isSeries;
-    data['is_live'] = this.isLive;
-    data['checked'] = this.checked;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['category_id'] = categoryId;
+    data['parent_id'] = parentId;
+    data['category_name'] = categoryName;
+    data['category_order'] = categoryOrder;
+    data['category_desc'] = categoryDesc;
+    data['date_added'] = dateAdded;
+    data['category_thumb'] = categoryThumb;
+    data['featured'] = featured;
+    data['isdefault'] = isdefault;
+    data['navbar'] = navbar;
+    data['is_trailer'] = isTrailer;
+    data['meta_title'] = metaTitle;
+    data['meta_description'] = metaDescription;
+    data['meta_keywords'] = metaKeywords;
+    data['is_video'] = isVideo;
+    data['is_series'] = isSeries;
+    data['is_live'] = isLive;
+    data['checked'] = checked;
     return data;
   }
 }
@@ -529,16 +526,16 @@ class Trailers {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['content_trailer_id'] = this.contentTrailerId;
-    data['trailer_id'] = this.trailerId;
-    data['content_id'] = this.contentId;
-    data['content_type'] = this.contentType;
-    data['order'] = this.order;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['active'] = this.active;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['content_trailer_id'] = contentTrailerId;
+    data['trailer_id'] = trailerId;
+    data['content_id'] = contentId;
+    data['content_type'] = contentType;
+    data['order'] = order;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['active'] = active;
+    data['status'] = status;
     return data;
   }
 }

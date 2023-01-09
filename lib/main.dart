@@ -7,12 +7,18 @@ import 'helper/depencies.dart' as dep;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dep.init();
+  runApp(MyApp());
+}
 
-  runApp(GetMaterialApp(
-    debugShowCheckedModeBanner: false,
-    //home: HomePage(),
-    initialRoute: RouteHelper.getInitial(),
-    // initialRoute: RouteHelper.getSplashPage(),
-    getPages: RouteHelper.routes,
-  ));
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      // home: HomePage(),
+      initialRoute: RouteHelper.getInitial(),
+      // initialRoute: RouteHelper.getSplashPage(),
+      getPages: RouteHelper.routes,
+    );
+  }
 }

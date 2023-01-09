@@ -26,6 +26,7 @@ class AuthController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       _userModel = UserModel.fromJson(response.body);
       authRepository.saveUserToken(_userModel.user!.token.toString());
+      authRepository.saveUsernameAndPassword(username, password);
 
       responseModel = ResponseModel(true, "Loggein successfully");
     } else {
@@ -39,6 +40,14 @@ class AuthController extends GetxController implements GetxService {
 
   bool userLoggedin() {
     return authRepository.userLoggedin();
+  }
+
+  Future<String> getToken() {
+    return authRepository.getUserToken();
+  }
+
+  Future<List<String?>> getUsernameAndPassword() {
+    return authRepository.getUsernameAndPassword();
   }
 
   Future<void> saveUsernameAndPassword(String username, String password) async {

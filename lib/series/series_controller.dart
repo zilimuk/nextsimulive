@@ -23,16 +23,18 @@ class SeriesController extends GetxController implements GetxService {
   Future<ResponseModel> getSeriesList(
       int categories, paginate, limit, page) async {
     _isLoading = true;
+    update();
     Response response =
         await seriesRepository.getSeriesList(categories, paginate, limit, page);
     final ResponseModel responseModel;
 
     if (response.statusCode == 200) {
       _seriesList = SeriesList.fromJson(response.body);
-
+      update();
       return ResponseModel(true, "Series retrieved successfull");
     } else {
       _isLoading = false;
+      update();
       return ResponseModel(false, response.statusText!);
     }
   }

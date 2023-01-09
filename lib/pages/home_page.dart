@@ -1,12 +1,14 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simulive/Auth/auth_controller.dart';
+import 'package:simulive/helper/route_helper.dart';
 import 'package:simulive/movies/movie_controller.dart';
-import 'package:simulive/pages/movie_detail_page.dart';
 import 'package:simulive/series/series_controller.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +22,19 @@ class HomePage extends StatelessWidget {
   Widget getBody() {
     var size = Get.mediaQuery.size;
     bool _isLoggeIn = Get.find<AuthController>().userLoggedin();
+    Future<String> _token = Get.find<AuthController>().getToken();
+    var _movieController = Get.find<MovieContoller>();
+
     if (_isLoggeIn) {
       // Get.Find<AuthController>().userinfo();
-      Get.find<MovieContoller>().fetchMovies(0, 1, 25, 1);
+
+      _movieController.fetchMovies(0, 1, 25, 1);
     } else {
       // Get.toNamed(RouteHelper.getSignInPage());
-      Get.find<MovieContoller>().fetchMovies(0, 1, 25, 1);
+      _movieController.fetchMovies(0, 1, 25, 1);
     }
     Get.find<SeriesController>().getSeriesList(0, 1, 25, 1);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: SingleChildScrollView(
@@ -128,13 +135,7 @@ class HomePage extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (_) => const VideoDetailPage(
-                          //               videoUrl:
-                          //                   "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8",
-                          //             )));
+                          // Get.find<MovieContoller>().fetchMoviePlayUrl(videoId)
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -207,7 +208,7 @@ class HomePage extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: GetBuilder<MovieContoller>(
                             builder: (movieController) {
-                          return _isLoggeIn && movieController.movies != null
+                          return movieController.movies != null
                               ? Container(
                                   child: Padding(
                                     padding: const EdgeInsets.only(right: 10),
@@ -217,13 +218,24 @@ class HomePage extends StatelessWidget {
                                               .length, (index) {
                                         return GestureDetector(
                                           onTap: () {
-                                            Get.to(() => MovieDetailPage(
-                                                videoUrl:
-                                                    "https://stream2.simulive.co.tz/streamable_videos/2022/09/12/1662999813794agig3g1r8sh2/1662999813794agig3g1r8sh2.m3u8",
-                                                movieData: movieController
-                                                    .movies!
-                                                    .videos!
-                                                    .data![index]));
+                                            _isLoggeIn
+                                                ? _movieController
+                                                    .fetchMoviePlayUrl(
+                                                        movieController
+                                                            .movies!
+                                                            .videos!
+                                                            .data![index]
+                                                            .videoid
+                                                            .toString())
+                                                : Get.toNamed(
+                                                    RouteHelper.signIn);
+                                            // Get.to(() => MovieDetailPage(
+                                            //     videoUrl:
+                                            //         "https://stream2.simulive.co.tz/streamable_videos/2022/09/12/1662999813794agig3g1r8sh2/1662999813794agig3g1r8sh2.m3u8",
+                                            //     movieData: movieController
+                                            //         .movies!
+                                            //         .videos!
+                                            //         .data![index]));
                                             //videoUrl:
                                             // "https://bstream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8",
                                           },
