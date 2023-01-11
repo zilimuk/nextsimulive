@@ -1,4 +1,6 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, no_leading_underscores_for_local_identifiers
+
+import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:simulive/helper/response_model.dart';
@@ -40,24 +42,29 @@ class MovieContoller extends GetxController implements GetxService {
     }
   }
 
-  Future<ResponseModel> fetchMoviePlayUrl(String videoId) async {
+  Future<VideoStreaming> fetchMoviePlayUrl(String videoId) async {
     _isLoading = true;
     update();
-
+    final VideoStreaming _videoStreaming;
     Response response = await movieRepository.getMovieUrl(videoId);
 
     // ignore: unused_local_variable
     final ResponseModel responseModel;
 
     if (response.statusCode == 200) {
+      // ignore: unused_local_variable
       _videoStreaming = VideoStreaming.fromJson(response.body);
-      print(_videoStreaming!.data![0].media![0].toString());
-      return responseModel =
-          ResponseModel(true, "Movies retrieved successfully");
-    } else {
-      _isLoading = false;
+      print(_videoStreaming);
       update();
-      return responseModel = ResponseModel(false, response.statusText!);
+
+      return _videoStreaming;
+      // } else {
+      //   _isLoading = false;
+      //   update();
+      //   responseModel = ResponseModel(false, response.statusText!);
+      //   return response.status;
+    } else {
+      return _videoStreaming = VideoStreaming.fromJson(response.body);
     }
   }
 }

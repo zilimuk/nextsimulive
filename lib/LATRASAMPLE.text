@@ -1,0 +1,35 @@
+REQUEST URL:  https://apis.paisha.app/latra
+METHOD: POST
+headers: { Authorization: }
+body: 
+{"start_date":"2023-01-01","end_date":"2023-01-08"}
+
+RESPONSE:
+[
+	{
+		"TripID": "89627254",
+		"Originating Coordinates": "-6.8137904,39.2921941",
+		"End Coordinates": "-6.7548901,39.2407488",
+		"Start Time": "2023-01-01 18:33:13",
+		"End Time": "2023-01-01 18:56:17",
+		"Total Fare": "10062.30",
+		"Total Distance": "10.11",
+		"Driver's Earnings": "8562.30",
+		"Vehicle Registration Number": "T173DVP",
+		"Driver License Number": "4001539908",
+		"Rating": "5.0"
+	},
+	{
+		"TripID": "89811212",
+		"Originating Coordinates": "-6.8129767,39.28680922",
+		"End Coordinates": "-6.8658666,39.2072056",
+		"Start Time": "2023-01-01 18:39:28",
+		"End Time": "2023-01-01 18:54:27",
+		"Total Fare": "12199.43",
+		"Total Distance": "13.84",
+		"Driver's Earnings": "10399.43",
+		"Vehicle Registration Number": "T727DXK",
+		"Driver License Number": "4004853524",
+		"Rating": "4.0"
+	}
+]

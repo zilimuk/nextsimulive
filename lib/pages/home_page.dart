@@ -8,6 +8,8 @@ import 'package:simulive/movies/model/video_streaming.dart';
 import 'package:simulive/movies/movie_controller.dart';
 import 'package:simulive/series/series_controller.dart';
 
+import 'movie_detail_page.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -44,7 +46,7 @@ class HomePage extends StatelessWidget {
         child: Stack(
           children: [
             SizedBox(
-              width: size.height - 80,
+              width: size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -54,6 +56,7 @@ class HomePage extends StatelessWidget {
                             children: [
                               Container(
                                 height: 500,
+                                width: size.width,
                                 decoration: BoxDecoration(
                                   color: Colors.green,
                                   image: DecorationImage(
@@ -70,6 +73,7 @@ class HomePage extends StatelessWidget {
                               ),
                               Container(
                                 height: 500,
+                                width: size.width,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                       colors: [
@@ -217,10 +221,10 @@ class HomePage extends StatelessWidget {
                                         movieController.movies!.videos!.data!
                                             .length, (index) {
                                       return GestureDetector(
-                                        onTap: () {
+                                        onTap: () async {
                                           if (_isLoggeIn) {
-                                            Future<Object> _url =
-                                                _movieController
+                                            VideoStreaming _videoStreaming =
+                                                await _movieController
                                                     .fetchMoviePlayUrl(
                                                         movieController
                                                             .movies!
@@ -228,17 +232,19 @@ class HomePage extends StatelessWidget {
                                                             .data![index]
                                                             .videoid
                                                             .toString());
-                                            // print(_url);
 
-                                            // Get.to(() => MovieDetailPage(
-                                            //     videoUrl:,
-                                            //     movieData: movieController
-                                            //         .movies!
-                                            //         .videos!
-                                            //         .data![index]));
+                                            Get.to(() => MovieDetailPage(
+                                                videoUrl: _videoStreaming!
+                                                    .data![0].media![0],
+                                                movieData: movieController
+                                                    .movies!
+                                                    .videos!
+                                                    .data![index]));
                                           } else {
                                             Get.toNamed(RouteHelper.signIn);
                                           }
+                                          // "https://stream2.simulive.co.tz/streamable_videos/2022/09/18/1663424463772nqzvlibga21/1663424463772nqzvlibga21.m3u8?height=1080&userid=1&video_version=2.7&platform=&default_source=2.7",
+
                                           // Get.to(() => MovieDetailPage(
                                           //     videoUrl:
                                           //         "https://stream2.simulive.co.tz/streamable_videos/2022/09/12/1662999813794agig3g1r8sh2/1662999813794agig3g1r8sh2.m3u8",

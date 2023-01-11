@@ -109,7 +109,7 @@ class SeriesData {
   String? contentTypeLabel;
   int? contentType;
   int? rate;
-  bool? loggedInUser;
+  String? loggedInUser;
 
   SeriesData(
       {this.seriesId,
