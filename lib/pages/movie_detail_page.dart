@@ -1,3 +1,4 @@
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:simulive/json/video_detail_json.dart';
 import 'package:simulive/movies/model/movie.dart';
@@ -93,11 +94,14 @@ class _MovieDetailPage extends State<MovieDetailPage> {
       child: Column(children: [
         SizedBox(
           height: size.height * 0.3,
+          width: size.width,
           child: Stack(
             children: [
               AspectRatio(
                   aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller)),
+                  child:
+                      // BetterPlayer.network(widget.videoUrl)),
+                      VideoPlayer(_controller)),
               Container(
                 decoration: BoxDecoration(color: Colors.black.withOpacity(0.2)),
               ),
@@ -166,7 +170,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
           height: 10,
         ),
         SizedBox(
-          height: size.height * .5,
+          height: size.height * .4,
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),

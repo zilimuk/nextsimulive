@@ -54,7 +54,7 @@ class MovieContoller extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       // ignore: unused_local_variable
       _videoStreaming = VideoStreaming.fromJson(response.body);
-      print(_videoStreaming);
+
       update();
 
       return _videoStreaming;

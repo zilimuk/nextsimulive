@@ -109,7 +109,6 @@ class SeriesData {
   String? contentTypeLabel;
   int? contentType;
   int? rate;
-  String? loggedInUser;
 
   SeriesData(
       {this.seriesId,
@@ -171,8 +170,7 @@ class SeriesData {
       this.currencySymbol,
       this.contentTypeLabel,
       this.contentType,
-      this.rate,
-      this.loggedInUser});
+      this.rate});
 
   SeriesData.fromJson(Map<String, dynamic> json) {
     seriesId = json['series_id'];
@@ -244,7 +242,6 @@ class SeriesData {
     contentTypeLabel = json['content_type_label'];
     contentType = json['content_type'];
     rate = json['rate'];
-    loggedInUser = json['logged_in_user'];
   }
 
   Map<String, dynamic> toJson() {
@@ -319,7 +316,6 @@ class SeriesData {
     data['content_type_label'] = contentTypeLabel;
     data['content_type'] = contentType;
     data['rate'] = rate;
-    data['logged_in_user'] = loggedInUser;
     return data;
   }
 }
