@@ -99,9 +99,8 @@ class _MovieDetailPage extends State<MovieDetailPage> {
             children: [
               AspectRatio(
                   aspectRatio: _controller.value.aspectRatio,
-                  child:
-                      // BetterPlayer.network(widget.videoUrl)),
-                      VideoPlayer(_controller)),
+                  child: BetterPlayer.network(widget.videoUrl)),
+              // VideoPlayer(_controller)),
               Container(
                 decoration: BoxDecoration(color: Colors.black.withOpacity(0.2)),
               ),
