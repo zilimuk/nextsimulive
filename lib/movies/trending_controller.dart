@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:simulive/configurations/http_request.dart';
 import 'package:http/http.dart' as http;
-import 'package:simulive/movies/model/trending_movie.dart';
+import 'package:simulive/movies/model/trending_video.dart';
 
 Future<TrendingVideo> fetchTrendingVideo() async {
   final response =

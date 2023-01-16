@@ -38,6 +38,74 @@ class MovieRepository extends GetxService {
     return await apiClient.getData(AppConstants.MOVIES + pagination);
   }
 
+  Future<Response> getMylistMovie(
+      int categories, int paginate, int limit, int page) async {
+    //check if you it is all categories "O" represents all Categories
+    if (categories == 0) {
+      validateCategories = 'categories';
+    } else {
+      // ignore: prefer_interpolation_to_compose_strings
+      validateCategories = 'categories=' + categories.toString();
+    }
+    // ignore: prefer_interpolation_to_compose_strings
+    String pagination = validateCategories! +
+        "&" +
+        "paginate=" +
+        paginate.toString() +
+        "&" +
+        "limit=" +
+        limit.toString() +
+        "&" +
+        "page=" +
+        page.toString();
+
+    return await apiClient.getData(AppConstants.MYLIST + pagination);
+  }
+
+  // Get video by category Id
+  Future<Response> getVideoByCategory(
+      int categories, int paginate, int limit, int page) async {
+    //check if you it is all categories "O" represents all Categories
+    if (categories == 0) {
+      validateCategories = 'categories';
+    } else {
+      // ignore: prefer_interpolation_to_compose_strings
+      validateCategories = 'categories=' + categories.toString();
+    }
+    // ignore: prefer_interpolation_to_compose_strings
+    String pagination = validateCategories! +
+        "&" +
+        "paginate=" +
+        paginate.toString() +
+        "&" +
+        "limit=" +
+        limit.toString() +
+        "&" +
+        "page=" +
+        page.toString();
+
+    return await apiClient.getData(AppConstants.MOVIES + pagination);
+  }
+
+  //Featured videos api request
+  Future<Response> getFeaturedMovie(int paginate, int limit, int page) async {
+    String pagination = "paginate=$paginate&limit=$limit&page=$page";
+
+    return await apiClient.getData(AppConstants.FEATURED + pagination);
+  }
+
+  //Trending videos api request
+  Future<Response> getTrendingMovie(int paginate, int limit, int page) async {
+    String pagination = "&paginate=$paginate&limit=$limit&page=$page";
+    return await apiClient.getData(AppConstants.TRENDING + pagination);
+  }
+
+  //Categories api request
+  Future<Response> getCategory() async {
+    return await apiClient.getData(AppConstants.CATEGORIES);
+  }
+
+  //streaming url api request
   Future<Response> getMovieUrl(String videoId) async {
     var _tok = await Get.find<AuthController>().getToken();
     String _token = _tok;
@@ -49,7 +117,5 @@ class MovieRepository extends GetxService {
     apiClient.updateHeader(_token, _phpid, _sesssalt);
     return await apiClient
         .postData("${AppConstants.VIDEO}$videoId/playable", {});
-    // return await apiClient.postData(
-    //     "${AppConstants.VIDEO}$videoId/playable", authController.getToken());
   }
 }

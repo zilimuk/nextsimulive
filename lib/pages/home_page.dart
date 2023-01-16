@@ -1,4 +1,4 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, unused_local_variable
+// ignore_for_file: no_leading_underscores_for_local_identifiers, unused_local_variable, prefer_typing_uninitialized_variables, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,6 +6,7 @@ import 'package:simulive/Auth/auth_controller.dart';
 import 'package:simulive/helper/route_helper.dart';
 import 'package:simulive/movies/model/video_streaming.dart';
 import 'package:simulive/movies/movie_controller.dart';
+import 'package:simulive/pages/trending_detail_page.dart';
 import 'package:simulive/series/series_controller.dart';
 
 import 'movie_detail_page.dart';
@@ -27,16 +28,23 @@ class HomePage extends StatelessWidget {
     bool _isLoggeIn = Get.find<AuthController>().userLoggedin();
     Future<String> _token = Get.find<AuthController>().getToken();
     var _movieController = Get.find<MovieContoller>();
-
+    var _myList;
+    var _category;
     VideoStreaming? _videoStreaming;
 
     if (_isLoggeIn) {
       // Get.Find<AuthController>().userinfo();
 
       _movieController.fetchMovies(0, 1, 25, 1);
+      _myList = _movieController.getMylistMovie(0, 1, 25, 1);
+      _movieController.getFeaturedMovie(1, 25, 1);
+      _category = _movieController.getCategory();
     } else {
       // Get.toNamed(RouteHelper.getSignInPage());
       _movieController.fetchMovies(0, 1, 25, 1);
+      _movieController.getFeaturedMovie(1, 25, 1);
+      _movieController.getTrendingMovie(1, 25, 1);
+      _category = _movieController.getCategory();
     }
     Get.find<SeriesController>().getSeriesList(0, 1, 25, 1);
 
@@ -196,16 +204,18 @@ class HomePage extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 15, right: 15),
-                        child: Text(
-                          "My List",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                      _isLoggeIn
+                          ? const Padding(
+                              padding: EdgeInsets.only(left: 15, right: 15),
+                              child: Text(
+                                "My List",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          : const SizedBox(),
                       const SizedBox(
                         height: 8,
                       ),
@@ -213,13 +223,13 @@ class HomePage extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: GetBuilder<MovieContoller>(
                             builder: (movieController) {
-                          return movieController.movies != null
+                          return movieController.videoMyList != null
                               ? Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Row(
                                     children: List.generate(
-                                        movieController.movies!.videos!.data!
-                                            .length, (index) {
+                                        movieController.videoMyList!.data!
+                                            .myList!.data!.length, (index) {
                                       return GestureDetector(
                                         onTap: () async {
                                           if (_isLoggeIn) {
@@ -264,8 +274,9 @@ class HomePage extends StatelessWidget {
                                             image: DecorationImage(
                                               image: NetworkImage(
                                                   movieController
-                                                      .movies!
-                                                      .videos!
+                                                      .videoMyList!
+                                                      .data!
+                                                      .myList!
                                                       .data![index]
                                                       .thumbs!
                                                       .original
@@ -289,7 +300,7 @@ class HomePage extends StatelessWidget {
                       const Padding(
                         padding: EdgeInsets.only(left: 15, right: 15),
                         child: Text(
-                          "Popular on Simulive",
+                          "Featured on Simulive",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -302,16 +313,27 @@ class HomePage extends StatelessWidget {
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: GetBuilder<MovieContoller>(
-                            builder: (popularController) {
-                          return popularController.movies != null
+                            builder: (featuredController) {
+                          return featuredController.featuredVideo != null
                               ? Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Row(
                                     children: List.generate(
-                                        popularController.movies!.videos!.data!
-                                            .length, (index) {
+                                        featuredController.featuredVideo!
+                                            .videos!.featured!.length, (index) {
                                       return GestureDetector(
                                         onTap: () {
+                                          Get.to(() => MovieDetailPage(
+                                              videoUrl: featuredController
+                                                  .movies!
+                                                  .videos!
+                                                  .data![index]
+                                                  .gif
+                                                  .toString(),
+                                              movieData: featuredController
+                                                  .movies!
+                                                  .videos!
+                                                  .data![index]));
                                           // Navigator.push(
                                           //     context,
                                           //     MaterialPageRoute(
@@ -327,10 +349,10 @@ class HomePage extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             image: DecorationImage(
                                               image: NetworkImage(
-                                                  popularController
-                                                      .movies!
+                                                  featuredController
+                                                      .featuredVideo!
                                                       .videos!
-                                                      .data![index]
+                                                      .featured![index]
                                                       .thumbs!
                                                       .original
                                                       .toString()),
@@ -365,18 +387,35 @@ class HomePage extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      GetBuilder<MovieContoller>(builder: (movieController) {
-                        return movieController.movies != null
+                      GetBuilder<MovieContoller>(builder: (trendingController) {
+                        return trendingController.trendingVideo != null
                             ? SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Row(
                                     children: List.generate(
-                                        movieController.movies!.videos!.data!
+                                        trendingController
+                                            .trendingVideo!
+                                            .videos!
+                                            .trending!
+                                            .data!
                                             .length, (index) {
                                       return GestureDetector(
                                         onTap: () {
+                                          Get.to(() => TrendingDetailPage(
+                                              videoUrl: trendingController
+                                                  .trendingVideo!
+                                                  .videos!
+                                                  .trending!
+                                                  .data![index]
+                                                  .gif
+                                                  .toString(),
+                                              movieData: trendingController
+                                                  .trendingVideo!
+                                                  .videos!
+                                                  .trending!
+                                                  .data![index]));
                                           // Navigator.push(
                                           //     context,
                                           //     MaterialPageRoute(
@@ -393,9 +432,10 @@ class HomePage extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             image: DecorationImage(
                                               image: NetworkImage(
-                                                  movieController
-                                                      .movies!
+                                                  trendingController
+                                                      .trendingVideo!
                                                       .videos!
+                                                      .trending!
                                                       .data![index]
                                                       .thumbs!
                                                       .original
@@ -421,7 +461,7 @@ class HomePage extends StatelessWidget {
                       const Padding(
                         padding: EdgeInsets.only(left: 15, right: 15),
                         child: Text(
-                          "Simulive Originals",
+                          "Simulive Series",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -484,71 +524,72 @@ class HomePage extends StatelessWidget {
                       const SizedBox(
                         height: 30,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 15, right: 15),
-                        child: Text(
-                          "Anime",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: GetBuilder<MovieContoller>(
-                            builder: (movieController) {
-                          return movieController.movies != null
-                              ? Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: Row(
+                      GetBuilder<MovieContoller>(builder: (categoryController) {
+                        return categoryController.videoCategories != null
+                            ? Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
                                     children: List.generate(
-                                        movieController.movies!.videos!.data!
-                                            .length, (index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (_) => const VideoDetailPage(
-                                          //             videoUrl:
-                                          //                 "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
-                                        },
-                                        child: Container(
-                                          margin:
-                                              const EdgeInsets.only(right: 8),
-                                          width: 110,
-                                          height: 160,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(
-                                                  movieController
-                                                      .movies!
-                                                      .videos!
-                                                      .data![index]
-                                                      .thumbs!
-                                                      .original
-                                                      .toString()),
-                                              fit: BoxFit.cover,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
-                                          ),
-                                        ),
-                                      );
-                                    }),
+                                      categoryController
+                                          .videoCategories!.categories!.length,
+                                      (index) {
+                                        return categoryController
+                                                    .videoCategories!
+                                                    .categories![index]
+                                                    .navbar ==
+                                                "yes"
+                                            ? Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 15,
+                                                                right: 15),
+                                                        child: Text(
+                                                          categoryController
+                                                              .videoCategories!
+                                                              .categories![
+                                                                  index]
+                                                              .categoryName!
+                                                              .toString(),
+                                                          style: const TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                  const SingleChildScrollView(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                right: 10),
+                                                      )),
+                                                ],
+                                              )
+                                            : Container();
+                                      },
+                                    ),
                                   ),
-                                )
-                              : const Center(
-                                  child: Text('No data found'),
-                                );
-                        }),
-                      ),
+                                ),
+                              )
+                            : Container();
+                      }),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

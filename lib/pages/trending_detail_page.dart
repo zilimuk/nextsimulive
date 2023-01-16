@@ -1,25 +1,24 @@
-import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:simulive/json/video_detail_json.dart';
-import 'package:simulive/movies/model/movie.dart';
+import 'package:simulive/movies/model/trending_video.dart';
 import 'package:video_player/video_player.dart';
 
-class MovieDetailPage extends StatefulWidget {
+class TrendingDetailPage extends StatefulWidget {
   final String videoUrl;
-  final Data movieData;
+  final TrendingData movieData;
 
-  const MovieDetailPage(
+  const TrendingDetailPage(
       {super.key, required this.videoUrl, required this.movieData});
 
   @override
-  State<MovieDetailPage> createState() => _MovieDetailPage();
+  State<TrendingDetailPage> createState() => _TrendingDetailPage();
 }
 
-class _MovieDetailPage extends State<MovieDetailPage> {
+class _TrendingDetailPage extends State<TrendingDetailPage> {
   late VideoPlayerController _controller;
-  late Data _movieData;
+  late TrendingData _movieData;
 
-  Data get movieData => _movieData;
+  TrendingData get movieData => _movieData;
   int activeMenu = 0;
 
   @override

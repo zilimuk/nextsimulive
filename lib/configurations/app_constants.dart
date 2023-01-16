@@ -9,9 +9,12 @@ class AppConstants {
   static const String MOVIES = "/api/videos/list/?";
   static const String SERIES = "/api/series/list/?";
   static const String VIDEO = "/api/v2/videos/";
+  static const String MYLIST = "/api/videos/myList?";
+  static const String FEATURED = "/api/videos/list/?featured=1";
+  static const String TRENDING = "/api/videos/list/?trending=1";
+  static const String CATEGORIES = "/api/videos/categories/";
 
-  // int categories, int paginate, int limit, int page
-
+  //Authorization constants
   static const String TOKEN = "";
   static const String PHPID = "";
   static const String SESSSALT = "";

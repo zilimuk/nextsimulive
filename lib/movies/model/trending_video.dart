@@ -1,7 +1,7 @@
 class TrendingVideo {
   int? status;
   String? message;
-  TrendingVideoList? videos;
+  Videos? videos;
   String? time;
 
   TrendingVideo({this.status, this.message, this.videos, this.time});
@@ -9,9 +9,7 @@ class TrendingVideo {
   TrendingVideo.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    videos = json['videos'] != null
-        ? TrendingVideoList.fromJson(json['videos'])
-        : null;
+    videos = json['videos'] != null ? Videos.fromJson(json['videos']) : null;
     time = json['time'];
   }
 
@@ -27,12 +25,12 @@ class TrendingVideo {
   }
 }
 
-class TrendingVideoList {
+class Videos {
   Trending? trending;
 
-  TrendingVideoList({this.trending});
+  Videos({this.trending});
 
-  TrendingVideoList.fromJson(Map<String, dynamic> json) {
+  Videos.fromJson(Map<String, dynamic> json) {
     trending =
         json['trending'] != null ? Trending.fromJson(json['trending']) : null;
   }
@@ -226,7 +224,7 @@ class TrendingData {
   String? dvrBackupDuration;
   String? epgDvrCatchupUrl;
   String? logo;
-  TrendingVideoPortraitThumbs? portraitThumbs;
+  PortraitThumbs? portraitThumbs;
   Thumbs? thumbs;
   String? gif;
   List<String>? files;
@@ -234,7 +232,7 @@ class TrendingData {
   String? year;
   String? durationInSeconds;
   int? rate;
-  dynamic trailers;
+  Trailers? trailers;
   String? favId;
   String? isFav;
   String? url;
@@ -242,7 +240,7 @@ class TrendingData {
   List<Categories>? categories;
   Quality? quality;
   String? interval;
-  TrendingVideoSeries? series;
+  Series? series;
   String? priceTag;
   bool? showPremiumBadge;
   bool? canPreOrder;
@@ -503,10 +501,12 @@ class TrendingData {
     year = json['year'];
     durationInSeconds = json['duration_in_seconds'];
     rate = json['rate'];
-    trailers = json['trailers'];
+    trailers =
+        json['trailers'] != null ? Trailers.fromJson(json['trailers']) : null;
     favId = json['fav_id'];
     isFav = json['is_fav'];
     url = json['url'];
+    shareable = json['shareable'];
     if (json['categories'] != null) {
       categories = <Categories>[];
       json['categories'].forEach((v) {
@@ -516,9 +516,7 @@ class TrendingData {
     quality =
         json['quality'] != null ? Quality.fromJson(json['quality']) : null;
     interval = json['interval'];
-    series = json['series'] != null
-        ? TrendingVideoSeries.fromJson(json['series'])
-        : null;
+    series = json['series'] != null ? Series.fromJson(json['series']) : null;
     priceTag = json['price_tag'];
     showPremiumBadge = json['show_premium_badge'];
     canPreOrder = json['can_pre_order'];
@@ -651,7 +649,9 @@ class TrendingData {
     data['year'] = year;
     data['duration_in_seconds'] = durationInSeconds;
     data['rate'] = rate;
-    data['trailers'] = trailers;
+    if (trailers != null) {
+      data['trailers'] = trailers!.toJson();
+    }
     data['fav_id'] = favId;
     data['is_fav'] = isFav;
     data['url'] = url;
@@ -675,39 +675,24 @@ class TrendingData {
   }
 }
 
-class TrendingVideoPortraitThumbs {
+class PortraitThumbs {
   String? original;
-  String? s160x240;
   String? s240x360;
-  String? s320x480;
   String? s480x720;
-  String? s720x1080;
 
-  TrendingVideoPortraitThumbs(
-      {this.original,
-      this.s160x240,
-      this.s240x360,
-      this.s320x480,
-      this.s480x720,
-      this.s720x1080});
+  PortraitThumbs({this.original, this.s240x360, this.s480x720});
 
-  TrendingVideoPortraitThumbs.fromJson(Map<String, dynamic> json) {
+  PortraitThumbs.fromJson(Map<String, dynamic> json) {
     original = json['original'];
-    s160x240 = json['160x240'];
     s240x360 = json['240x360'];
-    s320x480 = json['320x480'];
     s480x720 = json['480x720'];
-    s720x1080 = json['720x1080'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['original'] = original;
-    data['160x240'] = s160x240;
     data['240x360'] = s240x360;
-    data['320x480'] = s320x480;
     data['480x720'] = s480x720;
-    data['720x1080'] = s720x1080;
     return data;
   }
 }
@@ -753,6 +738,55 @@ class Thumbs {
     data['1280x720'] = s1280x720;
     data['1920x1080'] = s1920x1080;
     data['200x288'] = s200x288;
+    return data;
+  }
+}
+
+class Trailers {
+  String? contentTrailerId;
+  String? trailerId;
+  String? contentId;
+  String? contentType;
+  String? order;
+  String? createdAt;
+  String? updatedAt;
+  String? active;
+  String? status;
+
+  Trailers(
+      {this.contentTrailerId,
+      this.trailerId,
+      this.contentId,
+      this.contentType,
+      this.order,
+      this.createdAt,
+      this.updatedAt,
+      this.active,
+      this.status});
+
+  Trailers.fromJson(Map<String, dynamic> json) {
+    contentTrailerId = json['content_trailer_id'];
+    trailerId = json['trailer_id'];
+    contentId = json['content_id'];
+    contentType = json['content_type'];
+    order = json['order'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    active = json['active'];
+    status = json['status'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['content_trailer_id'] = contentTrailerId;
+    data['trailer_id'] = trailerId;
+    data['content_id'] = contentId;
+    data['content_type'] = contentType;
+    data['order'] = order;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['active'] = active;
+    data['status'] = status;
     return data;
   }
 }
@@ -857,7 +891,7 @@ class Quality {
   }
 }
 
-class TrendingVideoSeries {
+class Series {
   int? seriesId;
   String? seriesName;
   String? seriesDescription;
@@ -865,7 +899,7 @@ class TrendingVideoSeries {
   String? maturityLevel;
   String? category;
   int? userid;
-  int? partnerId;
+  String? partnerId;
   int? views;
   String? dateAdded;
   String? featured;
@@ -901,7 +935,7 @@ class TrendingVideoSeries {
   String? contentTypeLabel;
   String? title;
 
-  TrendingVideoSeries(
+  Series(
       {this.seriesId,
       this.seriesName,
       this.seriesDescription,
@@ -945,7 +979,7 @@ class TrendingVideoSeries {
       this.contentTypeLabel,
       this.title});
 
-  TrendingVideoSeries.fromJson(Map<String, dynamic> json) {
+  Series.fromJson(Map<String, dynamic> json) {
     seriesId = json['series_id'];
     seriesName = json['series_name'];
     seriesDescription = json['series_description'];

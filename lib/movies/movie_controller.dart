@@ -1,25 +1,35 @@
-// ignore_for_file: avoid_print, no_leading_underscores_for_local_identifiers
-
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:simulive/helper/response_model.dart';
 import 'package:simulive/movies/model/movie.dart';
+import 'package:simulive/movies/model/trending_video.dart';
+import 'package:simulive/movies/model/video_category.dart';
+import 'package:simulive/movies/model/video_featured.dart';
+import 'package:simulive/movies/model/video_mylist.dart';
 import 'package:simulive/movies/model/video_streaming.dart';
 import 'package:simulive/movies/repository/movie_repository.dart';
 
 class MovieContoller extends GetxController implements GetxService {
   final MovieRepository movieRepository;
   Movie? _movies;
-  VideoStreaming? _videoStreaming;
+  Movie? _videoByCatories;
+  VideoMyList? _videoMyList;
+  FeaturedVideo? _featuredVideo;
+  TrendingVideo? _trendingVideo;
+  VideoCategories? _videoCategories;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   Movie? get movies => _movies;
+  Movie? get movieByCategory => _videoByCatories;
+  VideoMyList? get videoMyList => _videoMyList;
+  FeaturedVideo? get featuredVideo => _featuredVideo;
+  TrendingVideo? get trendingVideo => _trendingVideo;
+  VideoCategories? get videoCategories => _videoCategories;
 
   MovieContoller({required this.movieRepository});
 
+// Fetch all videos movies + episodes
   Future<ResponseModel> fetchMovies(
       int categories, paginate, limit, page) async {
     _isLoading = true;
@@ -42,6 +52,108 @@ class MovieContoller extends GetxController implements GetxService {
     }
   }
 
+// Get all video from myList
+  Future<ResponseModel> getMylistMovie(
+      int categories, paginate, limit, page) async {
+    _isLoading = true;
+    update();
+    Response response =
+        await movieRepository.getMylistMovie(categories, paginate, limit, page);
+
+    final ResponseModel responseModel;
+
+    if (response.statusCode == 200) {
+      _videoMyList = VideoMyList.fromJson(response.body);
+      update();
+      return responseModel =
+          ResponseModel(true, "My List retrieved successfully");
+    } else {
+      _isLoading = false;
+      update();
+      return responseModel = ResponseModel(false, response.statusText!);
+    }
+  }
+
+//Get all featured Movie
+  Future<ResponseModel> getFeaturedMovie(int paginate, limit, page) async {
+    _isLoading = true;
+    update();
+    Response response =
+        await movieRepository.getFeaturedMovie(paginate, limit, page);
+
+    final ResponseModel responseModel;
+
+    if (response.statusCode == 200) {
+      _featuredVideo = FeaturedVideo.fromJson(response.body);
+      update();
+      return responseModel =
+          ResponseModel(true, "Featured List retreived succussfully");
+    } else {
+      _isLoading = false;
+      update();
+      return responseModel = ResponseModel(false, response.statusText!);
+    }
+  }
+
+//Get all Trending Movie
+  Future<ResponseModel> getTrendingMovie(int paginate, limit, page) async {
+    _isLoading = true;
+    update();
+
+    Response response =
+        await movieRepository.getTrendingMovie(paginate, limit, page);
+    final ResponseModel responseModel;
+    if (response.statusCode == 200) {
+      _trendingVideo = TrendingVideo.fromJson(response.body);
+      update();
+      return responseModel =
+          ResponseModel(true, "Trending video retrieved successfully");
+    } else {
+      _isLoading = false;
+      update();
+      return responseModel = ResponseModel(false, response.statusText!);
+    }
+  }
+
+//Get  categories
+  Future<ResponseModel> getCategory() async {
+    _isLoading = true;
+    update();
+    final ResponseModel responseModel;
+    Response response = await movieRepository.getCategory();
+
+    if (response.statusCode == 200) {
+      _videoCategories = VideoCategories.fromJson(response.body);
+      update();
+      return responseModel =
+          ResponseModel(true, "Categories retrieved successfully");
+    } else {
+      _isLoading = false;
+      update();
+      return responseModel = ResponseModel(false, response.statusText!);
+    }
+  }
+
+  //Get videos by Catory
+  Future<ResponseModel> getVideoByCategory(
+      int categories, paginate, limit, page) async {
+    _isLoading = true;
+    update();
+    Response response = await movieRepository.getVideoByCategory(
+        categories, paginate, limit, page);
+    final ResponseModel responseModel;
+    if (response.statusCode == 200) {
+      _videoByCatories = Movie.fromJson(response.body);
+      update();
+      return responseModel = ResponseModel(true, "Video fetched successfully");
+    } else {
+      _isLoading = false;
+      update();
+      return responseModel = ResponseModel(false, response.statusText!);
+    }
+  }
+
+//Fetch movie streaming URL
   Future<VideoStreaming> fetchMoviePlayUrl(String videoId) async {
     _isLoading = true;
     update();
@@ -58,11 +170,6 @@ class MovieContoller extends GetxController implements GetxService {
       update();
 
       return _videoStreaming;
-      // } else {
-      //   _isLoading = false;
-      //   update();
-      //   responseModel = ResponseModel(false, response.statusText!);
-      //   return response.status;
     } else {
       return _videoStreaming = VideoStreaming.fromJson(response.body);
     }
