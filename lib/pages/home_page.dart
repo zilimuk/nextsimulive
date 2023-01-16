@@ -567,6 +567,75 @@ class HomePage extends StatelessWidget {
                                                       ),
                                                     ],
                                                   ),
+                                                  SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    child: GetBuilder<
+                                                            MovieContoller>(
+                                                        builder:
+                                                            (movieController) {
+                                                      return movieController
+                                                                  .movies !=
+                                                              null
+                                                          ? Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      right:
+                                                                          10),
+                                                              child: Row(
+                                                                children: List.generate(
+                                                                    movieController
+                                                                        .movies!
+                                                                        .videos!
+                                                                        .data!
+                                                                        .length,
+                                                                    (inde) {
+                                                                  return Center(
+                                                                    child:
+                                                                        GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        // Navigator.push(
+                                                                        //     context,
+                                                                        //     MaterialPageRoute(
+                                                                        //         builder: (_) => const VideoDetailPage(
+                                                                        //             videoUrl:
+                                                                        //                 "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
+                                                                      },
+                                                                      child:
+                                                                          Container(
+                                                                        margin: const EdgeInsets.only(
+                                                                            right:
+                                                                                8),
+                                                                        width:
+                                                                            110,
+                                                                        height:
+                                                                            160,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          image:
+                                                                              DecorationImage(
+                                                                            image:
+                                                                                NetworkImage(movieController.movies!.videos!.data![inde].thumbs!.original.toString()),
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          ),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(6),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                }),
+                                                              ),
+                                                            )
+                                                          : const Center(
+                                                              child: Text(
+                                                                  'No data found'),
+                                                            );
+                                                    }),
+                                                  ),
                                                   const SizedBox(
                                                     height: 8,
                                                   ),
