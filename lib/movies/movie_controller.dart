@@ -134,7 +134,7 @@ class MovieContoller extends GetxController implements GetxService {
     }
   }
 
-  //Get videos by Catory
+  //Get videos by Category
   Future<ResponseModel> getVideoByCategory(
       int categories, paginate, limit, page) async {
     _isLoading = true;
