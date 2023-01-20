@@ -532,90 +532,102 @@ class HomePage extends StatelessWidget {
                                     movieController
                                         .videoCategories!.categories!.length;
                                 i++) {
-                              if (movieController.movies!.videos!.data !=
-                                  null) {
-                                for (var j = 0;
-                                    j <
-                                        movieController
-                                            .movies!.videos!.data!.length;
-                                    j++) {
-                                  if (movieController.movies!.videos!.data![j]
-                                          .categories !=
-                                      null) {
-                                    for (var k = 0;
-                                        k <
-                                            movieController.movies!.videos!
-                                                .data![j].categories!.length;
-                                        k++) {
-                                      if (movieController
-                                              .movies!
-                                              .videos!
-                                              .data![j]
-                                              .categories![k]
-                                              .categoryId ==
-                                          movieController.videoCategories!
-                                              .categories![i].categoryId) {
-                                        moviesInCategory.add({
-                                          'movie': movieController
-                                              .movies!.videos!.data![j],
-                                          'category': movieController
-                                              .videoCategories!.categories![i]
-                                        });
-                                      }
-                                    }
-                                  }
-                                }
+                              if (movieController
+                                      .videoCategories!.categories![i].navbar ==
+                                  "yes") {
+                                var _categoryMoivies = [];
+                                var _categoryMovies =
+                                    _movieController.getVideoByCategory(
+                                        movieController.videoCategories!
+                                            .categories![i].categoryId!
+                                            .toInt(),
+                                        1,
+                                        25,
+                                        1);
+                                moviesInCategory.add({
+                                  'category': movieController.videoCategories!
+                                      .categories![i].categoryName,
+                                  'movies': _categoryMoivies
+                                });
                               }
-                              // Display the moviesInCategory list in your UI
                             }
-                            return Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    for (var i = 0;
-                                        i <
-                                            movieController.videoCategories!
-                                                .categories!.length;
-                                        i++)
-                                      if (movieController.videoCategories!
-                                              .categories![i].navbar ==
-                                          "yes")
-                                        Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 15, right: 15),
-                                              child: Text(
-                                                movieController.videoCategories!
-                                                    .categories![i].categoryName
-                                                    .toString(),
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                            SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: ListView.builder(
-                                                itemCount:
-                                                    moviesInCategory.length,
-                                                itemBuilder:
-                                                    (BuildContext context,
-                                                        int index) {
-                                                  return Text(
-                                                      moviesInCategory[index]
-                                                          .name);
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                            return Column(
+                              children: [
+                                Row(
+                                  children: const [
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(left: 15, right: 15),
+                                      child: Text(
+                                        "Simulive Series",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: GetBuilder<SeriesController>(
+                                      builder: (seriesController) {
+                                    return seriesController.seriesList != null
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 10),
+                                            child: Row(
+                                              children: List.generate(
+                                                  seriesController
+                                                      .seriesList!
+                                                      .series!
+                                                      .data!
+                                                      .length, (index) {
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    // Navigator.push(
+                                                    //     context,
+                                                    //     MaterialPageRoute(
+                                                    //         builder: (_) => const VideoDetailPage(
+                                                    //             videoUrl:
+                                                    //                 "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
+                                                  },
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            right: 8),
+                                                    width: 165,
+                                                    height: 300,
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: NetworkImage(
+                                                            seriesController
+                                                                .seriesList!
+                                                                .series!
+                                                                .data![index]
+                                                                .thumbs!
+                                                                .original
+                                                                .toString()),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6),
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
+                                            ),
+                                          )
+                                        : const Center(
+                                            child: Text('No data found'),
+                                          );
+                                  }),
+                                )
+                              ],
                             );
                           } else {
                             return Container();

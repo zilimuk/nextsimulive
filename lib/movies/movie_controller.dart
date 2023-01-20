@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:get/get.dart';
 import 'package:simulive/helper/response_model.dart';
 import 'package:simulive/movies/model/movie.dart';
@@ -16,6 +18,7 @@ class MovieContoller extends GetxController implements GetxService {
   FeaturedVideo? _featuredVideo;
   TrendingVideo? _trendingVideo;
   VideoCategories? _videoCategories;
+  final _moviesInCategory = [];
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -26,6 +29,7 @@ class MovieContoller extends GetxController implements GetxService {
   FeaturedVideo? get featuredVideo => _featuredVideo;
   TrendingVideo? get trendingVideo => _trendingVideo;
   VideoCategories? get videoCategories => _videoCategories;
+  get moviesInCategory => _moviesInCategory;
 
   MovieContoller({required this.movieRepository});
 
@@ -124,6 +128,23 @@ class MovieContoller extends GetxController implements GetxService {
 
     if (response.statusCode == 200) {
       _videoCategories = VideoCategories.fromJson(response.body);
+
+      for (var i = 0; i < _videoCategories!.categories!.length; i++) {
+        if (_videoCategories!.categories![i].navbar == "yes") {
+          try {
+            var vcat = await getVideoByCategory(
+                _videoCategories!.categories![i].categoryId!.toInt(), 1, 25, 1);
+
+            print("Asante");
+            moviesInCategory.add({
+              'category': _videoCategories!.categories![i].categoryName,
+              'movies': vcat
+            });
+          } catch (e) {
+            print(e);
+          }
+        }
+      }
       update();
       return responseModel =
           ResponseModel(true, "Categories retrieved successfully");
@@ -135,21 +156,18 @@ class MovieContoller extends GetxController implements GetxService {
   }
 
   //Get videos by Category
-  Future<ResponseModel> getVideoByCategory(
+  Future<Movie> getVideoByCategory(
       int categories, paginate, limit, page) async {
-    _isLoading = true;
-    update();
+    final ResponseModel responseModel;
     Response response = await movieRepository.getVideoByCategory(
         categories, paginate, limit, page);
-    final ResponseModel responseModel;
     if (response.statusCode == 200) {
-      _videoByCatories = Movie.fromJson(response.body);
-      update();
-      return responseModel = ResponseModel(true, "Video fetched successfully");
+      return _videoByCatories = Movie.fromJson(response.body);
+
+      // return responseModel = ResponseModel(true, "Video fetched successfully");
     } else {
-      _isLoading = false;
-      update();
-      return responseModel = ResponseModel(false, response.statusText!);
+      // return responseModel = ResponseModel(false, response.statusText!);
+      return Movie.fromJson(response.body);
     }
   }
 
