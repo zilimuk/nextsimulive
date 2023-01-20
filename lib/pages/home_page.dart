@@ -522,118 +522,29 @@ class HomePage extends StatelessWidget {
                       const SizedBox(
                         height: 30,
                       ),
+                      //Kevin
                       GetBuilder<MovieContoller>(
                         builder: (movieController) {
-                          if (movieController.videoCategories != null &&
-                              movieController.movies != null) {
-                            var moviesInCategory = [];
-                            for (var i = 0;
-                                i <
-                                    movieController
-                                        .videoCategories!.categories!.length;
-                                i++) {
-                              if (movieController
-                                      .videoCategories!.categories![i].navbar ==
-                                  "yes") {
-                                var _categoryMoivies = [];
-                                var _categoryMovies =
-                                    _movieController.getVideoByCategory(
-                                        movieController.videoCategories!
-                                            .categories![i].categoryId!
-                                            .toInt(),
-                                        1,
-                                        25,
-                                        1);
-                                moviesInCategory.add({
-                                  'category': movieController.videoCategories!
-                                      .categories![i].categoryName,
-                                  'movies': _categoryMoivies
-                                });
-                              }
-                            }
-                            return Column(
-                              children: [
-                                Row(
-                                  children: const [
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.only(left: 15, right: 15),
-                                      child: Text(
-                                        "Simulive Series",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: GetBuilder<SeriesController>(
-                                      builder: (seriesController) {
-                                    return seriesController.seriesList != null
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10),
-                                            child: Row(
-                                              children: List.generate(
-                                                  seriesController
-                                                      .seriesList!
-                                                      .series!
-                                                      .data!
-                                                      .length, (index) {
-                                                return GestureDetector(
-                                                  onTap: () {
-                                                    // Navigator.push(
-                                                    //     context,
-                                                    //     MaterialPageRoute(
-                                                    //         builder: (_) => const VideoDetailPage(
-                                                    //             videoUrl:
-                                                    //                 "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
-                                                  },
-                                                  child: Container(
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            right: 8),
-                                                    width: 165,
-                                                    height: 300,
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: NetworkImage(
-                                                            seriesController
-                                                                .seriesList!
-                                                                .series!
-                                                                .data![index]
-                                                                .thumbs!
-                                                                .original
-                                                                .toString()),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6),
-                                                    ),
-                                                  ),
-                                                );
-                                              }),
-                                            ),
-                                          )
-                                        : const Center(
-                                            child: Text('No data found'),
-                                          );
-                                  }),
-                                )
-                              ],
-                            );
-                          } else {
+                          List<dynamic> myList =
+                              movieController.moviesInCategory.values.toList();
+                          if (myList == null) {
                             return Container();
                           }
+                          return Expanded(
+                            child: Row(
+                              children: List.generate(
+                                movieController
+                                    .moviesInCategory['movies'].length,
+                                (index) {
+                                  return Text(movieController
+                                      .moviesInCategory[index].category
+                                      .toString());
+                                },
+                              ),
+                            ),
+                          );
                         },
-                      ),
+                      )
                     ],
                   ),
                 ],

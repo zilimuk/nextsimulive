@@ -1,7 +1,10 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, no_leading_underscores_for_local_identifiers
+
+import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:simulive/helper/response_model.dart';
+import 'package:simulive/movies/model/category_videos.dart';
 import 'package:simulive/movies/model/movie.dart';
 import 'package:simulive/movies/model/trending_video.dart';
 import 'package:simulive/movies/model/video_category.dart';
@@ -13,7 +16,7 @@ import 'package:simulive/movies/repository/movie_repository.dart';
 class MovieContoller extends GetxController implements GetxService {
   final MovieRepository movieRepository;
   Movie? _movies;
-  Movie? _videoByCatories;
+  CategoryVideos? _videoByCatories;
   VideoMyList? _videoMyList;
   FeaturedVideo? _featuredVideo;
   TrendingVideo? _trendingVideo;
@@ -24,7 +27,7 @@ class MovieContoller extends GetxController implements GetxService {
   bool get isLoading => _isLoading;
 
   Movie? get movies => _movies;
-  Movie? get movieByCategory => _videoByCatories;
+  CategoryVideos? get movieByCategory => _videoByCatories;
   VideoMyList? get videoMyList => _videoMyList;
   FeaturedVideo? get featuredVideo => _featuredVideo;
   TrendingVideo? get trendingVideo => _trendingVideo;
@@ -134,14 +137,12 @@ class MovieContoller extends GetxController implements GetxService {
           try {
             var vcat = await getVideoByCategory(
                 _videoCategories!.categories![i].categoryId!.toInt(), 1, 25, 1);
-
-            print("Asante");
             moviesInCategory.add({
               'category': _videoCategories!.categories![i].categoryName,
-              'movies': vcat
+              'movies': _videoByCatories!.data
             });
           } catch (e) {
-            print(e);
+            // print(e);
           }
         }
       }
@@ -156,18 +157,24 @@ class MovieContoller extends GetxController implements GetxService {
   }
 
   //Get videos by Category
-  Future<Movie> getVideoByCategory(
+  Future<ResponseModel> getVideoByCategory(
       int categories, paginate, limit, page) async {
     final ResponseModel responseModel;
     Response response = await movieRepository.getVideoByCategory(
         categories, paginate, limit, page);
     if (response.statusCode == 200) {
-      return _videoByCatories = Movie.fromJson(response.body);
+      Map<String, dynamic> _mCategory = response.body;
+      _mCategory = _mCategory['videos']['category_videos']['$categories'];
+      // _mCategory = _mCategory['$categories'];
+      // print(_mCategory['currentPage']);
+      // return _videoByCatories = CategoryVideos.fromJson(_mCategory);
+      // print("videos");
+      _videoByCatories = CategoryVideos.fromJson(_mCategory);
 
-      // return responseModel = ResponseModel(true, "Video fetched successfully");
+      return responseModel = ResponseModel(true, "Video fetched successfully");
     } else {
-      // return responseModel = ResponseModel(false, response.statusText!);
-      return Movie.fromJson(response.body);
+      return responseModel = ResponseModel(false, response.statusText!);
+      // return CategoryVideos.fromJson(response.body);
     }
   }
 
@@ -178,11 +185,9 @@ class MovieContoller extends GetxController implements GetxService {
     final VideoStreaming _videoStreaming;
     Response response = await movieRepository.getMovieUrl(videoId);
 
-    // ignore: unused_local_variable
     final ResponseModel responseModel;
 
     if (response.statusCode == 200) {
-      // ignore: unused_local_variable
       _videoStreaming = VideoStreaming.fromJson(response.body);
 
       update();
