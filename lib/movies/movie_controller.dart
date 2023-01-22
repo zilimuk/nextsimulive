@@ -21,7 +21,7 @@ class MovieContoller extends GetxController implements GetxService {
   FeaturedVideo? _featuredVideo;
   TrendingVideo? _trendingVideo;
   VideoCategories? _videoCategories;
-  final _moviesInCategory = [];
+  List<VideoByCategory>? _moviesInCategory;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -32,7 +32,7 @@ class MovieContoller extends GetxController implements GetxService {
   FeaturedVideo? get featuredVideo => _featuredVideo;
   TrendingVideo? get trendingVideo => _trendingVideo;
   VideoCategories? get videoCategories => _videoCategories;
-  get moviesInCategory => _moviesInCategory;
+  List<VideoByCategory>? get moviesInCategory => _moviesInCategory;
 
   MovieContoller({required this.movieRepository});
 
@@ -131,21 +131,27 @@ class MovieContoller extends GetxController implements GetxService {
 
     if (response.statusCode == 200) {
       _videoCategories = VideoCategories.fromJson(response.body);
-
+      final mC = [];
       for (var i = 0; i < _videoCategories!.categories!.length; i++) {
         if (_videoCategories!.categories![i].navbar == "yes") {
           try {
             var vcat = await getVideoByCategory(
                 _videoCategories!.categories![i].categoryId!.toInt(), 1, 25, 1);
-            moviesInCategory.add({
+            mC.add({
               'category': _videoCategories!.categories![i].categoryName,
-              'movies': _videoByCatories!.data
+              'data': _videoByCatories!.data
             });
           } catch (e) {
             // print(e);
           }
         }
       }
+      final vCategories = <VideoByCategory>[];
+      mC.forEach((e) {
+        vCategories.add(VideoByCategory(e['category'], e['data']));
+      });
+      _moviesInCategory = vCategories;
+      // _moviesInCategory = VideoByCategory.fromJson(mC);
       update();
       return responseModel =
           ResponseModel(true, "Categories retrieved successfully");

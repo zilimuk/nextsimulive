@@ -761,3 +761,10 @@ class Quality {
     return data;
   }
 }
+
+class VideoByCategory {
+  String? category;
+  List<Data>? data;
+
+  VideoByCategory(this.category, this.data);
+}

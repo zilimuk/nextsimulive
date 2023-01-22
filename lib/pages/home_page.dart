@@ -525,24 +525,20 @@ class HomePage extends StatelessWidget {
                       //Kevin
                       GetBuilder<MovieContoller>(
                         builder: (movieController) {
-                          List<dynamic> myList =
-                              movieController.moviesInCategory.values.toList();
-                          if (myList == null) {
-                            return Container();
-                          }
-                          return Expanded(
-                            child: Row(
-                              children: List.generate(
-                                movieController
-                                    .moviesInCategory['movies'].length,
-                                (index) {
-                                  return Text(movieController
-                                      .moviesInCategory[index].category
-                                      .toString());
-                                },
-                              ),
-                            ),
-                          );
+                          return movieController.moviesInCategory != null
+                              ? Expanded(
+                                  child: Row(
+                                    children: List.generate(
+                                      movieController.moviesInCategory!.length,
+                                      (index) {
+                                        return Text(movieController
+                                            .moviesInCategory![index].category
+                                            .toString());
+                                      },
+                                    ),
+                                  ),
+                                )
+                              : Container();
                         },
                       )
                     ],
