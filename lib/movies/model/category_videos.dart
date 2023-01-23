@@ -1,6 +1,6 @@
 class CategoryVideos {
   int? currentPage;
-  List<Data>? data;
+  List<CategoryData>? data;
   String? firstPageUrl;
   int? from;
   int? lastPage;
@@ -29,9 +29,9 @@ class CategoryVideos {
   CategoryVideos.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <CategoryData>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        data!.add(CategoryData.fromJson(v));
       });
     }
     firstPageUrl = json['first_page_url'];
@@ -66,7 +66,7 @@ class CategoryVideos {
   }
 }
 
-class Data {
+class CategoryData {
   int? videoid;
   String? videokey;
   String? videoPassword;
@@ -200,7 +200,7 @@ class Data {
   String? availabilityDate;
   String? contentTypeLabel;
 
-  Data(
+  CategoryData(
       {this.videoid,
       this.videokey,
       this.videoPassword,
@@ -334,7 +334,7 @@ class Data {
       this.availabilityDate,
       this.contentTypeLabel});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  CategoryData.fromJson(Map<String, dynamic> json) {
     videoid = json['videoid'];
     videokey = json['videokey'];
     videoPassword = json['video_password'];
@@ -764,7 +764,7 @@ class Quality {
 
 class VideoByCategory {
   String? category;
-  List<Data>? data;
+  List<CategoryData>? data;
 
   VideoByCategory(this.category, this.data);
 }

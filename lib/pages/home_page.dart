@@ -6,6 +6,7 @@ import 'package:simulive/Auth/auth_controller.dart';
 import 'package:simulive/helper/route_helper.dart';
 import 'package:simulive/movies/model/video_streaming.dart';
 import 'package:simulive/movies/movie_controller.dart';
+import 'package:simulive/pages/movie_by_category_detail_page.dart';
 import 'package:simulive/pages/trending_detail_page.dart';
 import 'package:simulive/series/series_controller.dart';
 
@@ -526,16 +527,93 @@ class HomePage extends StatelessWidget {
                       GetBuilder<MovieContoller>(
                         builder: (movieController) {
                           return movieController.moviesInCategory != null
-                              ? Expanded(
-                                  child: Row(
-                                    children: List.generate(
-                                      movieController.moviesInCategory!.length,
-                                      (index) {
-                                        return Text(movieController
-                                            .moviesInCategory![index].category
-                                            .toString());
-                                      },
-                                    ),
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: List.generate(
+                                    movieController.moviesInCategory!.length,
+                                    (index) {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 15,
+                                                right: 15,
+                                                top: 10,
+                                                bottom: 10),
+                                            child: Text(
+                                              movieController
+                                                  .moviesInCategory![index]
+                                                  .category
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10),
+                                              child: Row(
+                                                children: List.generate(
+                                                    movieController
+                                                        .moviesInCategory![
+                                                            index]
+                                                        .data!
+                                                        .length, (indexy) {
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      Get.to(() => MovieByCategoryDetailPage(
+                                                          videoByCategory:
+                                                              movieController
+                                                                  .moviesInCategory,
+                                                          movieData: movieController
+                                                              .moviesInCategory![
+                                                                  index]
+                                                              .data![indexy]));
+                                                      // Navigator.push(
+                                                      //     context,
+                                                      //     MaterialPageRoute(
+                                                      //         builder: (_) =>
+                                                      //             const VideoDetailPage(
+                                                      //                 videoUrl:
+                                                      //                     "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
+                                                    },
+                                                    child: Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              right: 8),
+                                                      width: 110,
+                                                      height: 160,
+                                                      decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                              movieController
+                                                                  .moviesInCategory![
+                                                                      index]
+                                                                  .data![indexy]
+                                                                  .thumbs!
+                                                                  .original
+                                                                  .toString()),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(6),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      );
+                                    },
                                   ),
                                 )
                               : Container();
