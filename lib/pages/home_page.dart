@@ -1,16 +1,17 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, unused_local_variable, prefer_typing_uninitialized_variables, unnecessary_null_comparison
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simulive/Auth/auth_controller.dart';
 import 'package:simulive/helper/route_helper.dart';
 import 'package:simulive/movies/model/video_streaming.dart';
 import 'package:simulive/movies/movie_controller.dart';
+import 'package:simulive/pages/featured_detail_page.dart';
 import 'package:simulive/pages/movie_by_category_detail_page.dart';
+import 'package:simulive/pages/mylist_detail_page.dart';
 import 'package:simulive/pages/trending_detail_page.dart';
 import 'package:simulive/series/series_controller.dart';
-
-import 'movie_detail_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class HomePage extends StatelessWidget {
     var size = Get.mediaQuery.size;
     bool _isLoggeIn = Get.find<AuthController>().userLoggedin();
     Future<String> _token = Get.find<AuthController>().getToken();
-    var _movieController = Get.find<MovieContoller>();
+    var _movieController = Get.find<MovieController>();
     var _myList;
     var _category;
     VideoStreaming? _videoStreaming;
@@ -61,23 +62,29 @@ class HomePage extends StatelessWidget {
                     return seriesController.seriesList != null
                         ? Stack(
                             children: [
-                              Container(
-                                height: 500,
-                                width: size.width,
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  image: DecorationImage(
-                                    image: NetworkImage(seriesController
-                                        .seriesList!
-                                        .series!
-                                        .data![2]
-                                        .thumbs!
-                                        .original
-                                        .toString()),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
+                              SizedBox(
+                                  height: 500,
+                                  width: size.width,
+                                  child: CachedNetworkImage(
+                                    imageUrl: seriesController.seriesList!
+                                        .series!.data![2].thumbs!.original
+                                        .toString(),
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                            colorFilter: const ColorFilter.mode(
+                                                Color.fromARGB(
+                                                    255, 252, 252, 252),
+                                                BlendMode.colorBurn)),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  )),
                               Container(
                                 height: 500,
                                 width: size.width,
@@ -147,7 +154,11 @@ class HomePage extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // Get.find<MovieContoller>().fetchMoviePlayUrl(videoId)
+                          if (_isLoggeIn) {
+                            //  Get.find<MovieController>().fetchMoviePlayUrl(videoId)
+                          } else {
+                            Get.toNamed(RouteHelper.getSignInPage());
+                          }
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -220,7 +231,7 @@ class HomePage extends StatelessWidget {
                       ),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: GetBuilder<MovieContoller>(
+                        child: GetBuilder<MovieController>(
                             builder: (movieController) {
                           return movieController.videoMyList != null
                               ? Padding(
@@ -236,18 +247,18 @@ class HomePage extends StatelessWidget {
                                                 await _movieController
                                                     .fetchMoviePlayUrl(
                                                         movieController
-                                                            .movies!
-                                                            .videos!
+                                                            .videoMyList!
+                                                            .data!
+                                                            .myList!
                                                             .data![index]
-                                                            .videoid
+                                                            .videoid!
                                                             .toString());
 
-                                            Get.to(() => MovieDetailPage(
-                                                videoUrl: _videoStreaming!
-                                                    .data![0].media![0],
+                                            Get.to(() => MyListDetailPage(
                                                 movieData: movieController
-                                                    .movies!
-                                                    .videos!
+                                                    .videoMyList!
+                                                    .data!
+                                                    .myList!
                                                     .data![index]));
                                           } else {
                                             Get.toNamed(RouteHelper.signIn);
@@ -269,21 +280,35 @@ class HomePage extends StatelessWidget {
                                               const EdgeInsets.only(right: 8),
                                           width: 110,
                                           height: 160,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(
-                                                  movieController
-                                                      .videoMyList!
-                                                      .data!
-                                                      .myList!
-                                                      .data![index]
-                                                      .thumbs!
-                                                      .original
-                                                      .toString()),
-                                              fit: BoxFit.cover,
+                                          child: CachedNetworkImage(
+                                            imageUrl: movieController
+                                                .videoMyList!
+                                                .data!
+                                                .myList!
+                                                .data![index]
+                                                .thumbs!
+                                                .original
+                                                .toString(),
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                    colorFilter:
+                                                        const ColorFilter.mode(
+                                                            Color.fromARGB(255,
+                                                                252, 252, 252),
+                                                            BlendMode
+                                                                .colorBurn)),
+                                              ),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
                                           ),
                                         ),
                                       );
@@ -311,7 +336,7 @@ class HomePage extends StatelessWidget {
                       ),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: GetBuilder<MovieContoller>(
+                        child: GetBuilder<MovieController>(
                             builder: (featuredController) {
                           return featuredController.featuredVideo != null
                               ? Padding(
@@ -322,17 +347,11 @@ class HomePage extends StatelessWidget {
                                             .videos!.featured!.length, (index) {
                                       return GestureDetector(
                                         onTap: () {
-                                          Get.to(() => MovieDetailPage(
-                                              videoUrl: featuredController
-                                                  .movies!
-                                                  .videos!
-                                                  .data![index]
-                                                  .gif
-                                                  .toString(),
+                                          Get.to(() => FeaturedDetailPage(
                                               movieData: featuredController
-                                                  .movies!
+                                                  .featuredVideo!
                                                   .videos!
-                                                  .data![index]));
+                                                  .featured![index]));
                                           // Navigator.push(
                                           //     context,
                                           //     MaterialPageRoute(
@@ -345,20 +364,34 @@ class HomePage extends StatelessWidget {
                                               const EdgeInsets.only(right: 8),
                                           width: 110,
                                           height: 160,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(
-                                                  featuredController
-                                                      .featuredVideo!
-                                                      .videos!
-                                                      .featured![index]
-                                                      .thumbs!
-                                                      .original
-                                                      .toString()),
-                                              fit: BoxFit.cover,
+                                          child: CachedNetworkImage(
+                                            imageUrl: featuredController
+                                                .featuredVideo!
+                                                .videos!
+                                                .featured![index]
+                                                .thumbs!
+                                                .original
+                                                .toString(),
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                    colorFilter:
+                                                        const ColorFilter.mode(
+                                                            Color.fromARGB(255,
+                                                                252, 252, 252),
+                                                            BlendMode
+                                                                .colorBurn)),
+                                              ),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
                                           ),
                                         ),
                                       );
@@ -386,7 +419,8 @@ class HomePage extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      GetBuilder<MovieContoller>(builder: (trendingController) {
+                      GetBuilder<MovieController>(
+                          builder: (trendingController) {
                         return trendingController.trendingVideo != null
                             ? SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
@@ -428,21 +462,35 @@ class HomePage extends StatelessWidget {
                                               const EdgeInsets.only(right: 8),
                                           width: 110,
                                           height: 160,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(
-                                                  trendingController
-                                                      .trendingVideo!
-                                                      .videos!
-                                                      .trending!
-                                                      .data![index]
-                                                      .thumbs!
-                                                      .original
-                                                      .toString()),
-                                              fit: BoxFit.cover,
+                                          child: CachedNetworkImage(
+                                            imageUrl: trendingController
+                                                .trendingVideo!
+                                                .videos!
+                                                .trending!
+                                                .data![index]
+                                                .thumbs!
+                                                .original
+                                                .toString(),
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                    colorFilter:
+                                                        const ColorFilter.mode(
+                                                            Color.fromARGB(255,
+                                                                252, 252, 252),
+                                                            BlendMode
+                                                                .colorBurn)),
+                                              ),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
                                           ),
                                         ),
                                       );
@@ -495,20 +543,34 @@ class HomePage extends StatelessWidget {
                                               const EdgeInsets.only(right: 8),
                                           width: 165,
                                           height: 300,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(
-                                                  seriesController
-                                                      .seriesList!
-                                                      .series!
-                                                      .data![index]
-                                                      .thumbs!
-                                                      .original
-                                                      .toString()),
-                                              fit: BoxFit.cover,
+                                          child: CachedNetworkImage(
+                                            imageUrl: seriesController
+                                                .seriesList!
+                                                .series!
+                                                .data![index]
+                                                .thumbs!
+                                                .original
+                                                .toString(),
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                    colorFilter:
+                                                        const ColorFilter.mode(
+                                                            Color.fromARGB(255,
+                                                                252, 252, 252),
+                                                            BlendMode
+                                                                .colorBurn)),
+                                              ),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
                                           ),
                                         ),
                                       );
@@ -523,8 +585,7 @@ class HomePage extends StatelessWidget {
                       const SizedBox(
                         height: 30,
                       ),
-                      //Kevin
-                      GetBuilder<MovieContoller>(
+                      GetBuilder<MovieController>(
                         builder: (movieController) {
                           return movieController.moviesInCategory != null
                               ? Column(
@@ -568,9 +629,6 @@ class HomePage extends StatelessWidget {
                                                   return GestureDetector(
                                                     onTap: () {
                                                       Get.to(() => MovieByCategoryDetailPage(
-                                                          videoByCategory:
-                                                              movieController
-                                                                  .moviesInCategory,
                                                           movieData: movieController
                                                               .moviesInCategory![
                                                                   index]
@@ -584,28 +642,49 @@ class HomePage extends StatelessWidget {
                                                       //                     "https://stream.simulive.co.tz/streamable_videos/2022/08/09/1659973358Be44OPvWKl/1659973358Be44OPvWKl.m3u8")));
                                                     },
                                                     child: Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              right: 8),
-                                                      width: 110,
-                                                      height: 160,
-                                                      decoration: BoxDecoration(
-                                                        image: DecorationImage(
-                                                          image: NetworkImage(
-                                                              movieController
-                                                                  .moviesInCategory![
-                                                                      index]
-                                                                  .data![indexy]
-                                                                  .thumbs!
-                                                                  .original
-                                                                  .toString()),
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(6),
-                                                      ),
-                                                    ),
+                                                        margin: const EdgeInsets
+                                                            .only(right: 8),
+                                                        width: 110,
+                                                        height: 160,
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl: movieController
+                                                              .moviesInCategory![
+                                                                  index]
+                                                              .data![indexy]
+                                                              .thumbs!
+                                                              .original
+                                                              .toString(),
+                                                          imageBuilder: (context,
+                                                                  imageProvider) =>
+                                                              Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                              image: DecorationImage(
+                                                                  image:
+                                                                      imageProvider,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  colorFilter: const ColorFilter
+                                                                          .mode(
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          252,
+                                                                          252,
+                                                                          252),
+                                                                      BlendMode
+                                                                          .colorBurn)),
+                                                            ),
+                                                          ),
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              const Icon(
+                                                                  Icons.error),
+                                                        )),
                                                   );
                                                 }),
                                               ),

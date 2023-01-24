@@ -2,50 +2,46 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simulive/json/video_detail_json.dart';
-import 'package:simulive/movies/model/trending_video.dart';
-import 'package:video_player/video_player.dart';
+import 'package:simulive/movies/model/video_featured.dart';
+import 'package:simulive/movies/movie_controller.dart';
 
-import '../movies/movie_controller.dart';
+class FeaturedDetailPage extends StatefulWidget {
+  final FeaturedData movieData;
 
-class TrendingDetailPage extends StatefulWidget {
-  final String videoUrl;
-  final TrendingData movieData;
-
-  const TrendingDetailPage(
-      {super.key, required this.videoUrl, required this.movieData});
+  const FeaturedDetailPage({super.key, required this.movieData});
 
   @override
-  State<TrendingDetailPage> createState() => _TrendingDetailPage();
+  State<FeaturedDetailPage> createState() => _FeaturedDetailPage();
 }
 
-class _TrendingDetailPage extends State<TrendingDetailPage> {
-  late VideoPlayerController _controller;
-  late TrendingData _movieData;
+class _FeaturedDetailPage extends State<FeaturedDetailPage> {
+  // late VideoPlayerController _controller;
+  late FeaturedData _movieData;
 
-  TrendingData get movieData => _movieData;
+  FeaturedData get movieData => _movieData;
   int activeMenu = 0;
 
-  @override
-  void initState() {
-    // ignore: todo
-    // TODO: implement initState
-    super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {
-          _controller.play();
-        });
-      });
-    _movieData = widget.movieData;
-  }
+  // @override
+  // void initState() {
+  //   // ignore: todo
+  //   // TODO: implement initState
+  //   super.initState();
+  //   _controller = VideoPlayerController.network(widget.videoUrl)
+  //     ..initialize().then((_) {
+  //       setState(() {
+  //         _controller.play();
+  //       });
+  //     });
+  //   _movieData = widget.movieData;
+  // }
 
-  @override
-  void dispose() {
-    // ignore: todo
-    // TODO: implement dispose
-    super.dispose();
-    _controller.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // ignore: todo
+  //   // TODO: implement dispose
+  //   super.dispose();
+  //   _controller.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +53,7 @@ class _TrendingDetailPage extends State<TrendingDetailPage> {
   }
 
   PreferredSizeWidget getAppBar() {
+    _movieData = widget.movieData;
     return AppBar(
       backgroundColor: Colors.black,
       elevation: 0,

@@ -1,48 +1,45 @@
-import 'package:better_player/better_player.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:simulive/json/video_detail_json.dart';
 import 'package:simulive/movies/model/movie.dart';
-import 'package:video_player/video_player.dart';
+import 'package:simulive/movies/movie_controller.dart';
 
 class MovieDetailPage extends StatefulWidget {
-  final String videoUrl;
   final Data movieData;
 
-  const MovieDetailPage(
-      {super.key, required this.videoUrl, required this.movieData});
+  const MovieDetailPage({super.key, required this.movieData});
 
   @override
   State<MovieDetailPage> createState() => _MovieDetailPage();
 }
 
 class _MovieDetailPage extends State<MovieDetailPage> {
-  late VideoPlayerController _controller;
+  // late VideoPlayerController _controller;
   late Data _movieData;
 
   Data get movieData => _movieData;
   int activeMenu = 0;
 
-  @override
-  void initState() {
-    // ignore: todo
-    // TODO: implement initState
-    super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {
-          _controller.play();
-        });
-      });
-    _movieData = widget.movieData;
-  }
+  // @override
+  // void initState() {
+  //   // ignore: todo
+  //   super.initState();
+  //   _controller = VideoPlayerController.network(widget.videoUrl)
+  //     ..initialize().then((_) {
+  //       setState(() {
+  //         _controller.play();
+  //       });
+  //     });
+  //   _movieData = widget.movieData;
+  // }
 
-  @override
-  void dispose() {
-    // ignore: todo
-    // TODO: implement dispose
-    super.dispose();
-    _controller.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // ignore: todo
+  //   super.dispose();
+  //   _controller.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +51,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
   }
 
   PreferredSizeWidget getAppBar() {
+    _movieData = widget.movieData;
     return AppBar(
       backgroundColor: Colors.black,
       elevation: 0,
@@ -86,40 +84,65 @@ class _MovieDetailPage extends State<MovieDetailPage> {
   }
 
   Widget getBody() {
+    _movieData = widget.movieData;
+    Get.find<MovieController>().getRelatedVideos(
+        movieData.categories![0].categoryId!.toInt(),
+        movieData.videoid!.toInt(),
+        1,
+        10,
+        1);
     var size = MediaQuery.of(context).size;
-    // print(_movieData.title);
     return SizedBox(
       width: size.width,
       height: size.height,
       child: Column(children: [
         SizedBox(
-          height: size.height * 0.3,
+          height: size.height * 0.22,
           width: size.width,
           child: Stack(
             children: [
-              AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child:
-                      // BetterPlayer.network(widget.videoUrl)),
-                      VideoPlayer(_controller)),
-              Container(
-                decoration: BoxDecoration(color: Colors.black.withOpacity(0.2)),
-              ),
               Center(
-                child: IconButton(
-                  icon: Icon(
-                      _controller.value.isPlaying ? null : Icons.play_arrow,
-                      color: Colors.white,
-                      size: 50),
-                  onPressed: () {
-                    setState(() {
-                      _controller.value.isPlaying
-                          ? _controller.pause()
-                          : _controller.play();
-                    });
-                  },
+                child: CachedNetworkImage(
+                  imageUrl: movieData.gif.toString(),
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                          colorFilter: const ColorFilter.mode(
+                              Color.fromARGB(255, 252, 252, 252),
+                              BlendMode.colorBurn)),
+                    ),
+                  ),
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                          value: downloadProgress.progress),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
+              // AspectRatio(
+              //     aspectRatio: _controller.value.aspectRatio,
+              //     child:
+              //         // BetterPlayer.network(widget.videoUrl)),
+              //         VideoPlayer(_controller)),
+              Container(
+                decoration: BoxDecoration(color: Colors.black.withOpacity(0.1)),
+              ),
+              // Center(
+              //   child: IconButton(
+              //     icon: Icon(
+              //         _controller.value.isPlaying ? null : Icons.play_arrow,
+              //         color: Colors.white,
+              //         size: 50),
+              //     onPressed: () {
+              //       setState(() {
+              //         _controller.value.isPlaying
+              //             ? _controller.pause()
+              //             : _controller.play();
+              //       });
+              //     },
+              //   ),
+              // ),
               Positioned(
                 left: 5,
                 bottom: 20,
@@ -145,10 +168,10 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                 ),
               ),
               Positioned(
-                right: 5,
+                right: 6,
                 bottom: 20,
                 child: Container(
-                  width: 25,
+                  width: 30,
                   height: 35,
                   decoration: BoxDecoration(
                       color: Colors.black,
@@ -156,7 +179,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                   child: Row(
                     children: const [
                       Icon(
-                        Icons.volume_mute,
+                        Icons.volume_off,
                         color: Colors.white,
                       )
                     ],
@@ -170,7 +193,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
           height: 10,
         ),
         SizedBox(
-          height: size.height * .4,
+          height: size.height * .64,
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
@@ -268,7 +291,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                     height: 10,
                   ),
                   Text(
-                    "Contunue watching ${movieData.title}",
+                    "${movieData.title}",
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontWeight: FontWeight.bold,
@@ -295,7 +318,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                             width: 15,
                           ),
                           Text(
-                            "Resume",
+                            "Play",
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -372,7 +395,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                         ),
                       ),
                       Text(
-                        "${movieData.interval} remaining",
+                        "${movieData.interval}",
                         style:
                             const TextStyle(fontSize: 10, color: Colors.grey),
                       )
@@ -433,7 +456,10 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: List.generate(episodesList.length, (index) {
+                      children: List.generate(
+                          movieData.seasonId != 0
+                              ? episodesList.length
+                              : movieMore.length, (index) {
                         return Padding(
                           padding: const EdgeInsets.only(right: 25),
                           child: GestureDetector(
@@ -455,7 +481,9 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 12),
                                     child: Text(
-                                      episodesList[index],
+                                      movieData.seasonId != 0
+                                          ? episodesList[index]
+                                          : movieMore[index],
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: activeMenu == index
@@ -475,7 +503,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                   const SizedBox(
                     height: 30,
                   ),
-                  movieData.seriesId != 0
+                  movieData.seasonId != 0
                       ? Text(
                           "Season 1",
                           style: TextStyle(
@@ -483,169 +511,233 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                               color: Colors.white.withOpacity(0.5),
                               fontWeight: FontWeight.w500),
                         )
-                      : const Text(''),
+                      : Container(),
                   const SizedBox(
                     height: 15,
                   ),
-                  movieData.seriesId != 0
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children:
-                                  List.generate(movieList.length, (index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 20),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: (size.width - 30) * 0.85,
-                                            height: 100,
-                                            child: Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 150,
-                                                  child: Stack(
-                                                    children: [
-                                                      Container(
-                                                        width: 150,
-                                                        height: 90,
-                                                        decoration: BoxDecoration(
+                  GetBuilder<MovieController>(builder: (movieController) {
+                    return movieController.relatedVideos != null
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                children: List.generate(
+                                    movieController.relatedVideos!.data!.length,
+                                    (indexr) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: (size.width - 30) * 0.85,
+                                              height: 100,
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 150,
+                                                    child: Stack(
+                                                      children: [
+                                                        Container(
+                                                          width: 150,
+                                                          height: 90,
+                                                          decoration:
+                                                              BoxDecoration(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                         5),
-                                                            image: DecorationImage(
-                                                                image: AssetImage(
-                                                                    movieList[
-                                                                            index]
-                                                                        [
-                                                                        'img']),
-                                                                fit: BoxFit
-                                                                    .cover)),
-                                                      ),
-                                                      Container(
-                                                        width: 150,
-                                                        height: 90,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.black
-                                                              .withOpacity(0.3),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                        top: 30,
-                                                        left: 57,
-                                                        child: Container(
-                                                          width: 38,
-                                                          height: 38,
-                                                          decoration: BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      0.4),
-                                                              border: Border.all(
-                                                                  width: 2,
-                                                                  color: Colors
-                                                                      .white)),
-                                                          child: const Center(
-                                                            child: Icon(
-                                                              Icons.play_arrow,
-                                                              color:
-                                                                  Colors.white,
+                                                            // image: DecorationImage(
+                                                            //     image: AssetImage(movieController
+                                                            //         .relatedVideos!
+                                                            //         .data![
+                                                            //             indexr]
+                                                            //         .thumbs!
+                                                            //         .original
+                                                            //         .toString()),
+                                                            //     fit: BoxFit
+                                                            //         .cover),
+                                                          ),
+                                                          child: Center(
+                                                            child:
+                                                                CachedNetworkImage(
+                                                              imageUrl: movieController
+                                                                  .relatedVideos!
+                                                                  .data![indexr]
+                                                                  .thumbs!
+                                                                  .original
+                                                                  .toString(),
+                                                              imageBuilder:
+                                                                  (context,
+                                                                          imageProvider) =>
+                                                                      Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  image: DecorationImage(
+                                                                      image:
+                                                                          imageProvider,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      colorFilter: const ColorFilter
+                                                                              .mode(
+                                                                          Color.fromARGB(
+                                                                              255,
+                                                                              252,
+                                                                              252,
+                                                                              252),
+                                                                          BlendMode
+                                                                              .colorBurn)),
+                                                                ),
+                                                              ),
+                                                              progressIndicatorBuilder: (context,
+                                                                      url,
+                                                                      downloadProgress) =>
+                                                                  CircularProgressIndicator(
+                                                                      value: downloadProgress
+                                                                          .progress),
+                                                              errorWidget: (context,
+                                                                      url,
+                                                                      error) =>
+                                                                  const Icon(Icons
+                                                                      .error),
                                                             ),
                                                           ),
                                                         ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: (size.width) * 0.35,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 10),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          movieList[index]
-                                                              ['title'],
-                                                          style: TextStyle(
-                                                              fontSize: 15,
-                                                              height: 1.3,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Colors
-                                                                  .white
-                                                                  .withOpacity(
-                                                                      0.9)),
+                                                        Container(
+                                                          width: 150,
+                                                          height: 90,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.3),
+                                                          ),
                                                         ),
-                                                        const SizedBox(
-                                                          height: 3,
-                                                        ),
-                                                        Text(
-                                                          movieList[index]
-                                                              ['duration'],
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              height: 1.3,
-                                                              color: Colors
-                                                                  .white
-                                                                  .withOpacity(
-                                                                      0.5)),
-                                                        ),
+                                                        Positioned(
+                                                          top: 30,
+                                                          left: 57,
+                                                          child: Container(
+                                                            width: 38,
+                                                            height: 38,
+                                                            decoration: BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        0.4),
+                                                                border: Border.all(
+                                                                    width: 2,
+                                                                    color: Colors
+                                                                        .white)),
+                                                            child: const Center(
+                                                              child: Icon(
+                                                                Icons
+                                                                    .play_arrow,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
                                                       ],
                                                     ),
                                                   ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: (size.width - 30) * 0.15,
-                                            height: 100,
-                                            child: Center(
-                                              child: Icon(
-                                                Icons.file_download,
-                                                color: Colors.white
-                                                    .withOpacity(0.7),
+                                                  SizedBox(
+                                                    width: (size.width) * 0.35,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            movieController
+                                                                .relatedVideos!
+                                                                .data![indexr]
+                                                                .title
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                fontSize: 15,
+                                                                height: 1.3,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .white
+                                                                    .withOpacity(
+                                                                        0.9)),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 3,
+                                                          ),
+                                                          Text(
+                                                            movieController
+                                                                .relatedVideos!
+                                                                .data![indexr]
+                                                                .duration
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                height: 1.3,
+                                                                color: Colors
+                                                                    .white
+                                                                    .withOpacity(
+                                                                        0.5)),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        movieList[index]['description'],
-                                        style: TextStyle(
-                                          height: 1.4,
-                                          color: Colors.white.withOpacity(0.5),
+                                            SizedBox(
+                                              width: (size.width - 30) * 0.15,
+                                              height: 100,
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.file_download,
+                                                  color: Colors.white
+                                                      .withOpacity(0.7),
+                                                ),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }),
-                            )
-                          ],
-                        )
-                      : const SizedBox(
-                          height: 0,
-                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          movieController.relatedVideos!
+                                              .data![indexr].description
+                                              .toString(),
+                                          style: TextStyle(
+                                            height: 1.4,
+                                            color:
+                                                Colors.white.withOpacity(0.5),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ],
+                          )
+                        : Container();
+                  }),
                   const SizedBox(
                     height: 50,
                   ),

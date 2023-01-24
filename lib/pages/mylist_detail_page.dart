@@ -2,50 +2,46 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simulive/json/video_detail_json.dart';
-import 'package:simulive/movies/model/trending_video.dart';
-import 'package:video_player/video_player.dart';
+import 'package:simulive/movies/model/video_mylist.dart';
+import 'package:simulive/movies/movie_controller.dart';
 
-import '../movies/movie_controller.dart';
+class MyListDetailPage extends StatefulWidget {
+  final VideoListData movieData;
 
-class TrendingDetailPage extends StatefulWidget {
-  final String videoUrl;
-  final TrendingData movieData;
-
-  const TrendingDetailPage(
-      {super.key, required this.videoUrl, required this.movieData});
+  const MyListDetailPage({super.key, required this.movieData});
 
   @override
-  State<TrendingDetailPage> createState() => _TrendingDetailPage();
+  State<MyListDetailPage> createState() => _MyListDetailPage();
 }
 
-class _TrendingDetailPage extends State<TrendingDetailPage> {
-  late VideoPlayerController _controller;
-  late TrendingData _movieData;
+class _MyListDetailPage extends State<MyListDetailPage> {
+  // late VideoPlayerController _controller;
+  late VideoListData _movieData;
 
-  TrendingData get movieData => _movieData;
+  VideoListData get movieData => _movieData;
   int activeMenu = 0;
 
-  @override
-  void initState() {
-    // ignore: todo
-    // TODO: implement initState
-    super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {
-          _controller.play();
-        });
-      });
-    _movieData = widget.movieData;
-  }
+  // @override
+  // void initState() {
+  //   // ignore: todo
+  //   // TODO: implement initState
+  //   super.initState();
+  //   _controller = VideoPlayerController.network(widget.videoUrl)
+  //     ..initialize().then((_) {
+  //       setState(() {
+  //         _controller.play();
+  //       });
+  //     });
+  //   _movieData = widget.movieData;
+  // }
 
-  @override
-  void dispose() {
-    // ignore: todo
-    // TODO: implement dispose
-    super.dispose();
-    _controller.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // ignore: todo
+  //   // TODO: implement dispose
+  //   super.dispose();
+  //   _controller.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +53,7 @@ class _TrendingDetailPage extends State<TrendingDetailPage> {
   }
 
   PreferredSizeWidget getAppBar() {
+    _movieData = widget.movieData;
     return AppBar(
       backgroundColor: Colors.black,
       elevation: 0,
@@ -219,7 +216,7 @@ class _TrendingDetailPage extends State<TrendingDetailPage> {
                   Row(
                     children: [
                       Text(
-                        movieData.contentTypeLabel.toString(),
+                        movieData.seasonId != null ? 'series' : 'movie',
                         style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -277,14 +274,12 @@ class _TrendingDetailPage extends State<TrendingDetailPage> {
                             width: 2,
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
+                        child: const Padding(
+                          padding: EdgeInsets.only(
                               left: 6, right: 6, top: 4, bottom: 4),
                           child: Text(
-                            movieData.quality!.hd.toString() == "yes"
-                                ? 'HD'
-                                : 'UHD',
-                            style: const TextStyle(
+                            'HD',
+                            style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500),
                           ),
@@ -400,7 +395,7 @@ class _TrendingDetailPage extends State<TrendingDetailPage> {
                         ),
                       ),
                       Text(
-                        "${movieData.interval}",
+                        "${movieData.duration}",
                         style:
                             const TextStyle(fontSize: 10, color: Colors.grey),
                       )

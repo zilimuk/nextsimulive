@@ -13,10 +13,11 @@ import 'package:simulive/movies/model/video_mylist.dart';
 import 'package:simulive/movies/model/video_streaming.dart';
 import 'package:simulive/movies/repository/movie_repository.dart';
 
-class MovieContoller extends GetxController implements GetxService {
+class MovieController extends GetxController implements GetxService {
   final MovieRepository movieRepository;
   Movie? _movies;
-  CategoryVideos? _videoByCatories;
+  CategoryVideos? _videoByCategories;
+  RelatedVideos? _relatedVideos;
   VideoMyList? _videoMyList;
   FeaturedVideo? _featuredVideo;
   TrendingVideo? _trendingVideo;
@@ -27,14 +28,15 @@ class MovieContoller extends GetxController implements GetxService {
   bool get isLoading => _isLoading;
 
   Movie? get movies => _movies;
-  CategoryVideos? get movieByCategory => _videoByCatories;
+  CategoryVideos? get movieByCategory => _videoByCategories;
+  RelatedVideos? get relatedVideos => _relatedVideos;
   VideoMyList? get videoMyList => _videoMyList;
   FeaturedVideo? get featuredVideo => _featuredVideo;
   TrendingVideo? get trendingVideo => _trendingVideo;
   VideoCategories? get videoCategories => _videoCategories;
   List<VideoByCategory>? get moviesInCategory => _moviesInCategory;
 
-  MovieContoller({required this.movieRepository});
+  MovieController({required this.movieRepository});
 
 // Fetch all videos movies + episodes
   Future<ResponseModel> fetchMovies(
@@ -139,7 +141,7 @@ class MovieContoller extends GetxController implements GetxService {
                 _videoCategories!.categories![i].categoryId!.toInt(), 1, 25, 1);
             mC.add({
               'category': _videoCategories!.categories![i].categoryName,
-              'data': _videoByCatories!.data
+              'data': _videoByCategories!.data
             });
           } catch (e) {
             // print(e);
@@ -171,16 +173,31 @@ class MovieContoller extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       Map<String, dynamic> _mCategory = response.body;
       _mCategory = _mCategory['videos']['category_videos']['$categories'];
-      // _mCategory = _mCategory['$categories'];
-      // print(_mCategory['currentPage']);
-      // return _videoByCatories = CategoryVideos.fromJson(_mCategory);
-      // print("videos");
-      _videoByCatories = CategoryVideos.fromJson(_mCategory);
+      _videoByCategories = CategoryVideos.fromJson(_mCategory);
 
       return responseModel = ResponseModel(true, "Video fetched successfully");
     } else {
       return responseModel = ResponseModel(false, response.statusText!);
       // return CategoryVideos.fromJson(response.body);
+    }
+  }
+
+  //Fetch related videos
+  Future<ResponseModel> getRelatedVideos(
+      int category, excludeVideo, paginate, limit, page) async {
+    final ResponseModel responseModel;
+
+    Response response = await movieRepository.getRelatedVideos(
+        category, excludeVideo, paginate, limit, page);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> _mCategory = response.body;
+      _mCategory = _mCategory['videos']['category_videos']['$category'];
+      _relatedVideos = RelatedVideos.fromJson(_mCategory);
+
+      return responseModel = ResponseModel(true, "Video fetched successfully");
+    } else {
+      return responseModel = ResponseModel(false, response.statusText!);
     }
   }
 

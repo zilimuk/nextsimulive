@@ -796,3 +796,39 @@ class Quality {
     return data;
   }
 }
+
+class RelatedVideos {
+  int? currentPage;
+  List<Data>? data;
+  String? firstPageUrl;
+  int? from;
+  int? lastPage;
+  String? lastPageUrl;
+  String? nextPageUrl;
+  String? path;
+  String? perPage;
+  String? prevPageUrl;
+  int? to;
+  int? total;
+
+  RelatedVideos({this.data, this.currentPage});
+  RelatedVideos.fromJson(Map<String, dynamic> json) {
+    currentPage = json['current_page'];
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(Data.fromJson(v));
+      });
+    }
+    firstPageUrl = json['first_page_url'];
+    from = json['from'];
+    lastPage = json['last_page'];
+    lastPageUrl = json['last_page_url'];
+    nextPageUrl = json['next_page_url'];
+    path = json['path'];
+    perPage = json['per_page'];
+    prevPageUrl = json['prev_page_url'];
+    to = json['to'];
+    total = json['total'];
+  }
+}

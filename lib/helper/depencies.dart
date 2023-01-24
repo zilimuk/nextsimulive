@@ -23,6 +23,6 @@ Future<void> init() async {
 
 //Controllers
   Get.lazyPut(() => AuthController(authRepository: Get.find()));
-  Get.lazyPut(() => MovieContoller(movieRepository: Get.find()));
+  Get.lazyPut(() => MovieController(movieRepository: Get.find()));
   Get.lazyPut(() => SeriesController(seriesRepository: Get.find()));
 }

@@ -200,6 +200,8 @@ class CategoryData {
   String? availabilityDate;
   String? contentTypeLabel;
 
+  static var add;
+
   CategoryData(
       {this.videoid,
       this.videokey,

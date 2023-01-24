@@ -6,14 +6,14 @@ void showCustomSnackBar(String message,
   Get.snackbar(
     title,
     message,
-    titleText: BigText(text: title, color: Colors.white),
+    titleText: BigText(text: title, color: Colors.grey),
     messageText: Text(
       message,
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Color.fromARGB(255, 25, 25, 25)),
     ),
-    colorText: Colors.white,
+    colorText: Colors.black,
     snackPosition: SnackPosition.TOP,
-    backgroundColor: Colors.redAccent,
+    backgroundColor: Colors.white,
   );
 }
 

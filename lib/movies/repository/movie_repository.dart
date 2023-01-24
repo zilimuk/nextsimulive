@@ -105,6 +105,14 @@ class MovieRepository extends GetxService {
     return await apiClient.getData(AppConstants.CATEGORIES);
   }
 
+//Request related videos
+  Future<Response> getRelatedVideos(
+      int category, excludeVideo, paginate, limit, page) async {
+    String pagination =
+        "categories=$category&exclude_video=$excludeVideo&paginate=$paginate&limit=$limit&page=$page";
+    return await apiClient.getData(AppConstants.MOVIES + pagination);
+  }
+
   //streaming url api request
   Future<Response> getMovieUrl(String videoId) async {
     var _tok = await Get.find<AuthController>().getToken();

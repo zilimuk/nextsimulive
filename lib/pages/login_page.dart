@@ -20,7 +20,7 @@ class LoginPage extends StatelessWidget {
     if (username.isEmpty) {
       showCustomSnackBar("Enter username", title: "Username");
     } else if (password.isEmpty) {
-      showCustomSnackBar("Enter password", title: "password");
+      showCustomSnackBar("Enter password", title: "Password");
     } else if (password.length < 6) {
       showCustomSnackBar("Password must not be less than six charachers",
           title: "Password");
@@ -38,6 +38,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool _obsecureText = true;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return GetBuilder<AuthController>(builder: (
@@ -45,7 +46,7 @@ class LoginPage extends StatelessWidget {
     ) {
       return !authController.isLoading
           ? Scaffold(
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.black,
               body: SingleChildScrollView(
                 child: Column(children: [
                   Container(
@@ -64,17 +65,17 @@ class LoginPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "Hello",
+                            "Welcome",
                             style: TextStyle(
-                              fontSize: 70,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontSize: 48,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
-                          Text(
-                            "Sign into your account",
+                          const Text(
+                            "Back !",
                             style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey[500],
+                              fontSize: 48,
+                              color: Colors.white,
                             ),
                           ),
                           SizedBox(
@@ -91,30 +92,34 @@ class LoginPage extends StatelessWidget {
                                       offset: const Offset(1, 1),
                                       color: Colors.grey.withOpacity(0.2)),
                                 ]),
-                            child: TextField(
-                              controller: usernameController,
-                              decoration: InputDecoration(
-                                  hintText: "username",
-                                  prefixIcon: const Icon(
-                                    Icons.email,
-                                    color: Colors.deepOrangeAccent,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                      color: Colors.white,
-                                      width: 1.0,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: TextField(
+                                controller: usernameController,
+                                decoration: InputDecoration(
+                                    hintText: "username",
+                                    suffixIcon: const Icon(
+                                      Icons.email,
+                                      color: Color.fromARGB(246, 250, 17, 17),
                                     ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                      color: Colors.white,
-                                      width: 1.0,
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Colors.white,
+                                        width: 1.0,
+                                      ),
                                     ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15))),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Colors.white,
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15))),
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -131,31 +136,45 @@ class LoginPage extends StatelessWidget {
                                       offset: const Offset(1, 1),
                                       color: Colors.grey.withOpacity(0.2)),
                                 ]),
-                            child: TextField(
-                              controller: passwordController,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                  hintText: "password",
-                                  prefixIcon: const Icon(
-                                    Icons.lock,
-                                    color: Colors.deepOrangeAccent,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                      color: Colors.white,
-                                      width: 1.0,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: TextField(
+                                controller: passwordController,
+                                obscureText: _obsecureText,
+                                decoration: InputDecoration(
+                                    hintText: "password",
+                                    suffixIcon: GestureDetector(
+                                      onTap: () {
+                                        _obsecureText = !_obsecureText;
+                                      },
+                                      child: Icon(
+                                          _obsecureText
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: const Color.fromARGB(
+                                              246, 250, 17, 17)),
+
+                                      // Icons.remove_red_eye_outlined,
+                                      // color: Color.fromARGB(246, 250, 17, 17),
                                     ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                      color: Colors.white,
-                                      width: 1.0,
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Colors.white,
+                                        width: 1.0,
+                                      ),
                                     ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15))),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color: Colors.white,
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15))),
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -178,56 +197,62 @@ class LoginPage extends StatelessWidget {
                         ]),
                   ),
                   const SizedBox(
-                    height: 30,
+                    height: 70,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      _login(authController);
-                    },
-                    child: Container(
-                      width: screenHeight * 0.3,
-                      height: screenHeight * 0.08,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        image: const DecorationImage(
-                            image:
-                                AssetImage("assets/images/auth/loginbtn.png"),
-                            fit: BoxFit.cover),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Sign in",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
+                  Row(
+                    children: [
+                      Expanded(
+                          child: Container(
+                              margin:
+                                  const EdgeInsets.only(left: 30, right: 20),
+                              child: const Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ))),
+                      GestureDetector(
+                        onTap: () {
+                          _login(authController);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 20, right: 20),
+                          width: screenHeight * 0.15,
+                          height: screenHeight * 0.07,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            image: const DecorationImage(
+                                image: AssetImage(
+                                    "assets/images/auth/loginbtn.png"),
+                                fit: BoxFit.cover),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  SizedBox(
-                    height: screenHeight * 0.03,
-                  ),
-                  RichText(
-                    text: TextSpan(
-                        text: "Don't have an account?",
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: 18,
-                        ),
-                        children: const [
-                          TextSpan(
-                            text: " Create",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                            // recognizer: TapGestureRecognizer()..onTap=()=>Get.to(()=>SignupPage())
-                          ),
-                        ]),
-                  )
+                  // SizedBox(
+                  //   height: screenHeight * 0.03,
+                  // ),
+                  // RichText(
+                  //   text: TextSpan(
+                  //       text: "Don't have an account?",
+                  //       style: TextStyle(
+                  //         color: Colors.grey[500],
+                  //         fontSize: 18,
+                  //       ),
+                  //       children: const [
+                  //         TextSpan(
+                  //           text: " Create",
+                  //           style: TextStyle(
+                  //             color: Colors.black,
+                  //             fontWeight: FontWeight.bold,
+                  //             fontSize: 18,
+                  //           ),
+                  //           // recognizer: TapGestureRecognizer()..onTap=()=>Get.to(()=>SignupPage())
+                  //         ),
+                  //       ]),
+                  // )
                 ]),
               ),
             )

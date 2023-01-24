@@ -26,15 +26,15 @@ class FeaturedVideo {
 }
 
 class Videos {
-  List<Featured>? featured;
+  List<FeaturedData>? featured;
 
   Videos({this.featured});
 
   Videos.fromJson(Map<String, dynamic> json) {
     if (json['featured'] != null) {
-      featured = <Featured>[];
+      featured = <FeaturedData>[];
       json['featured'].forEach((v) {
-        featured!.add(Featured.fromJson(v));
+        featured!.add(FeaturedData.fromJson(v));
       });
     }
   }
@@ -48,7 +48,7 @@ class Videos {
   }
 }
 
-class Featured {
+class FeaturedData {
   int? videoid;
   String? videokey;
   String? videoPassword;
@@ -181,7 +181,7 @@ class Featured {
   String? availabilityDate;
   String? contentTypeLabel;
 
-  Featured(
+  FeaturedData(
       {this.videoid,
       this.videokey,
       this.videoPassword,
@@ -314,7 +314,7 @@ class Featured {
       this.availabilityDate,
       this.contentTypeLabel});
 
-  Featured.fromJson(Map<String, dynamic> json) {
+  FeaturedData.fromJson(Map<String, dynamic> json) {
     videoid = json['videoid'];
     videokey = json['videokey'];
     videoPassword = json['video_password'];
