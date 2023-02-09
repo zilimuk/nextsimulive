@@ -1,9 +1,15 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:simulive/Auth/auth_controller.dart';
+import 'package:simulive/helper/route_helper.dart';
 import 'package:simulive/json/video_detail_json.dart';
 import 'package:simulive/movies/model/video_featured.dart';
+import 'package:simulive/movies/model/video_streaming.dart';
 import 'package:simulive/movies/movie_controller.dart';
+import 'package:simulive/wigets/video_player_page.dart';
 
 class FeaturedDetailPage extends StatefulWidget {
   final FeaturedData movieData;
@@ -87,12 +93,14 @@ class _FeaturedDetailPage extends State<FeaturedDetailPage> {
 
   Widget getBody() {
     _movieData = widget.movieData;
-    Get.find<MovieController>().getRelatedVideos(
+    var _movieController = Get.find<MovieController>();
+    _movieController.getRelatedVideos(
         movieData.categories![0].categoryId!.toInt(),
         movieData.videoid!.toInt(),
         1,
         10,
         1);
+    bool _isLoggeIn = Get.find<AuthController>().userLoggedin();
     var size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width,
@@ -108,6 +116,7 @@ class _FeaturedDetailPage extends State<FeaturedDetailPage> {
                   imageUrl: movieData.gif.toString(),
                   imageBuilder: (context, imageProvider) => Container(
                     decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
                       image: DecorationImage(
                           image: imageProvider,
                           fit: BoxFit.cover,
@@ -307,26 +316,41 @@ class _FeaturedDetailPage extends State<FeaturedDetailPage> {
                     height: 40,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
-                            Icons.play_arrow,
-                            color: Colors.black,
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Text(
-                            "Play",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          )
-                        ]),
+                    child: GestureDetector(
+                      onTap: () async {
+                        if (_isLoggeIn) {
+                          VideoStreaming _videoStreaming =
+                              await _movieController.fetchMoviePlayUrl(
+                                  _movieData.videoid.toString());
+                          if (_videoStreaming != null) {
+                            Get.to(() =>
+                                VideoPlayerPage(videoUrl: _videoStreaming));
+                          }
+                        } else {
+                          Get.toNamed(RouteHelper.signIn);
+                        }
+                      },
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.play_arrow,
+                              color: Colors.black,
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Text(
+                              "Play",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
+                            )
+                          ]),
+                    ),
                   ),
                   const SizedBox(
                     height: 12,
@@ -336,7 +360,7 @@ class _FeaturedDetailPage extends State<FeaturedDetailPage> {
                     height: 40,
                     decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
