@@ -326,7 +326,7 @@ class _FeaturedDetailPage extends State<FeaturedDetailPage> {
                                   _movieData.videoid.toString());
                           if (_videoStreaming != null) {
                             Get.to(() =>
-                                VideoPlayerPage(videoUrl: _videoStreaming));
+                                VideoPlayerScreen(videoUrl: _videoStreaming));
                           }
                         } else {
                           Get.toNamed(RouteHelper.signIn);

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:simulive/json/video_detail_json.dart';
 import 'package:simulive/movies/model/category_videos.dart';
 import 'package:simulive/movies/movie_controller.dart';
-import 'package:video_player/video_player.dart';
 
 class VideoDetailPage extends StatefulWidget {
   final List<MovieController>? movieContollers;

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simulive/json/video_detail_json.dart';
 import 'package:simulive/movies/model/trending_video.dart';
-import 'package:video_player/video_player.dart';
 
 import '../movies/movie_controller.dart';
 
@@ -19,7 +18,7 @@ class TrendingDetailPage extends StatefulWidget {
 }
 
 class _TrendingDetailPage extends State<TrendingDetailPage> {
-  late VideoPlayerController _controller;
+  // late VideoPlayerController _controller;
   late TrendingData _movieData;
 
   TrendingData get movieData => _movieData;
@@ -30,12 +29,12 @@ class _TrendingDetailPage extends State<TrendingDetailPage> {
     // ignore: todo
     // TODO: implement initState
     super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {
-          _controller.play();
-        });
-      });
+    // _controller = VideoPlayerController.network(widget.videoUrl)
+    //   ..initialize().then((_) {
+    //     setState(() {
+    //       _controller.play();
+    //     });
+    //   });
     _movieData = widget.movieData;
   }
 
@@ -44,7 +43,7 @@ class _TrendingDetailPage extends State<TrendingDetailPage> {
     // ignore: todo
     // TODO: implement dispose
     super.dispose();
-    _controller.dispose();
+    // _controller.dispose();
   }
 
   @override
