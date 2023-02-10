@@ -12,6 +12,7 @@ class VideoPlayerScreen extends StatefulWidget {
 
 class _VideoPlayerScreen extends State<VideoPlayerScreen> {
   late final BetterPlayerController _betterPlayerController;
+  final GlobalKey _betterPlayerKey = GlobalKey();
 
   @override
   void initState() {
@@ -26,25 +27,64 @@ class _VideoPlayerScreen extends State<VideoPlayerScreen> {
         maxCacheFileSize: 10 * 1024 * 1024,
 
         ///Android only option to use cached video between app sessions
-        key: "testCacheKey",
+        // key: "testCacheKey",
       ),
-      bufferingConfiguration: const BetterPlayerBufferingConfiguration(
-        minBufferMs: 50000,
-        maxBufferMs: 13107200,
-        bufferForPlaybackMs: 2500,
-        bufferForPlaybackAfterRebufferMs: 5000,
-      ),
+      // bufferingConfiguration: const BetterPlayerBufferingConfiguration(
+      //   minBufferMs: 50000,
+      //   maxBufferMs: 13107200,
+      //   bufferForPlaybackMs: 2500,
+      //   bufferForPlaybackAfterRebufferMs: 5000,
+      // ),
     );
-    _betterPlayerController = BetterPlayerController(
-        const BetterPlayerConfiguration(
-            autoPlay: true,
-            fullScreenByDefault: true,
-            looping: true,
-            showPlaceholderUntilPlay: true,
-            autoDetectFullscreenAspectRatio: true),
-        betterPlayerDataSource: betterPlayerDataSource);
 
+    _betterPlayerController = BetterPlayerController(
+      const BetterPlayerConfiguration(
+        fit: BoxFit.contain,
+        handleLifecycle: true,
+        autoPlay: true,
+        fullScreenByDefault: false,
+        looping: true,
+        showPlaceholderUntilPlay: true,
+        autoDetectFullscreenAspectRatio: false,
+        autoDispose: false,
+        // deviceOrientationsAfterFullScreen: [
+        //   DeviceOrientation.landscapeLeft,
+        //   DeviceOrientation.landscapeRight
+        // ],
+        controlsConfiguration: BetterPlayerControlsConfiguration(
+          progressBarHandleColor: Color.fromARGB(255, 255, 0, 0),
+          progressBarPlayedColor: Color.fromARGB(255, 255, 0, 0),
+          loadingColor: Color.fromARGB(255, 255, 0, 0),
+          showControlsOnInitialize: true,
+          enableOverflowMenu: true,
+          enablePip: true,
+          enableFullscreen: true,
+
+          // overflowMenuCustomItems: [
+          //   BetterPlayerOverflowMenuItem(
+          //     Icons.account_circle_rounded,
+          //     "Custom element",
+          //     () => print("Click!"),
+          //   )
+          // ],
+        ),
+      ),
+      betterPlayerDataSource: betterPlayerDataSource,
+    );
+    // _betterPlayerController!
+    //     .setupDataSource(betterPlayerDataSource)
+    //     .then((response) {
+    //   // Source loaded successfully
+    //   videoLoading = false;
+    // }).catchError((error) async {
+    //   // Source did not load, url might be invalid
+    //   inspect(error);
+    // });
+    _betterPlayerController.isPictureInPictureSupported();
+    _betterPlayerController.enablePictureInPicture(_betterPlayerKey);
     _betterPlayerController.preCache(betterPlayerDataSource);
+    _betterPlayerController.setOverriddenAspectRatio(1.0);
+    super.initState();
   }
 
   @override
@@ -56,10 +96,14 @@ class _VideoPlayerScreen extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: BetterPlayer(
-        controller: _betterPlayerController,
+    return BetterPlayerMultipleGestureDetector(
+      onTap: (() {}),
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: BetterPlayer(
+          controller: _betterPlayerController,
+          key: _betterPlayerKey,
+        ),
       ),
     );
   }

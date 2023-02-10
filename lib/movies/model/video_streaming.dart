@@ -325,7 +325,7 @@ class Content {
   String? convProgress;
   String? isPremium;
   int? overrideDefaultMonetization;
-  String? creditsRequired;
+  int? creditsRequired;
   int? rentalHours;
   int? premiumCid;
   String? inEditorPick;
