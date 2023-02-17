@@ -1,7 +1,5 @@
-
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:simulive/movies/model/video_streaming.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
@@ -14,6 +12,7 @@ class VideoPlayerScreen extends StatefulWidget {
 
 class _VideoPlayerScreen extends State<VideoPlayerScreen> {
   late final BetterPlayerController _betterPlayerController;
+  final GlobalKey _betterPlayerKey = GlobalKey();
 
   @override
   void initState() {
@@ -40,22 +39,27 @@ class _VideoPlayerScreen extends State<VideoPlayerScreen> {
 
     _betterPlayerController = BetterPlayerController(
       const BetterPlayerConfiguration(
+        fit: BoxFit.contain,
+        handleLifecycle: true,
         autoPlay: true,
         fullScreenByDefault: false,
         looping: true,
         showPlaceholderUntilPlay: true,
         autoDetectFullscreenAspectRatio: false,
         autoDispose: false,
-        deviceOrientationsAfterFullScreen: [
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight
-        ],
+        // deviceOrientationsAfterFullScreen: [
+        //   DeviceOrientation.landscapeLeft,
+        //   DeviceOrientation.landscapeRight
+        // ],
         controlsConfiguration: BetterPlayerControlsConfiguration(
           progressBarHandleColor: Color.fromARGB(255, 255, 0, 0),
           progressBarPlayedColor: Color.fromARGB(255, 255, 0, 0),
           loadingColor: Color.fromARGB(255, 255, 0, 0),
           showControlsOnInitialize: true,
           enableOverflowMenu: true,
+          enablePip: true,
+          enableFullscreen: true,
+
           // overflowMenuCustomItems: [
           //   BetterPlayerOverflowMenuItem(
           //     Icons.account_circle_rounded,
@@ -76,6 +80,8 @@ class _VideoPlayerScreen extends State<VideoPlayerScreen> {
     //   // Source did not load, url might be invalid
     //   inspect(error);
     // });
+    _betterPlayerController.isPictureInPictureSupported();
+    _betterPlayerController.enablePictureInPicture(_betterPlayerKey);
     _betterPlayerController.preCache(betterPlayerDataSource);
     _betterPlayerController.setOverriddenAspectRatio(1.0);
     super.initState();
@@ -96,6 +102,7 @@ class _VideoPlayerScreen extends State<VideoPlayerScreen> {
         aspectRatio: 16 / 9,
         child: BetterPlayer(
           controller: _betterPlayerController,
+          key: _betterPlayerKey,
         ),
       ),
     );
