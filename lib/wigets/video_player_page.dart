@@ -81,8 +81,8 @@ class _VideoPlayerScreen extends State<VideoPlayerScreen> {
     return Scaffold(
       backgroundColor: Colors.black26,
       body: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
+        width: Get.width * 0.99,
+        height: Get.height * 0.99,
         child: GestureDetector(
           onTap: () {
             setState(() {
@@ -103,17 +103,15 @@ class _VideoPlayerScreen extends State<VideoPlayerScreen> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: AspectRatio(
-                              aspectRatio: _controller.value.aspectRatio,
-                              child: Center(
-                                child: FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: SizedBox(
-                                    width: _controller.value.size.width,
-                                    height: _controller.value.size.height,
-                                    child: VideoPlayer(_controller),
-                                  ),
+                          AspectRatio(
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: Center(
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: SizedBox(
+                                  width: _controller.value.size.width,
+                                  height: _controller.value.size.height,
+                                  child: VideoPlayer(_controller),
                                 ),
                               ),
                             ),
